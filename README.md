@@ -4,7 +4,6 @@ Advanced AI-powered cardiomegaly detection system designed for medical professio
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/865d7a66-ab80-4899-98b8-c7750c2a7e05
 The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
 
 Follow these steps:
