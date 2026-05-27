@@ -1,0 +1,64 @@
+@startuml user_session_state
+!theme plain
+title User Session State Chart Diagram
+
+[*] --> LoggedOut
+
+LoggedOut --> Authenticating : login()\n[User enters credentials]
+
+Authenticating --> ActiveSession : validCredentials()\n[Authentication successful]
+Authenticating --> LoginFailed : invalidCredentials()\n[Authentication failed]
+
+LoginFailed --> LoggedOut : retry()\n[User tries again]
+
+ActiveSession --> ActiveSession : performAction()\n[User interacts with system]
+ActiveSession --> SessionExpired : timeout()\n[Session timeout reached]
+ActiveSession --> LoggedOut : logout()\n[User logs out]
+ActiveSession --> Banned : userBanned()\n[Admin bans user]
+
+SessionExpired --> LoggedOut : cleanup()\n[Session cleaned up]
+
+Banned --> LoggedOut : sessionTerminated()\n[Forced logout]
+
+' Session validation
+ActiveSession --> SessionValidation : validateSession()\n[System checks session]
+SessionValidation --> ActiveSession : sessionValid()\n[Session still valid]
+SessionValidation --> LoggedOut : sessionInvalid()\n[Session invalid/user banned]
+
+' Notes
+note right of LoggedOut
+  User not authenticated
+  No system access
+end note
+
+note right of Authenticating
+  Validating username
+  and password
+end note
+
+note right of LoginFailed
+  Invalid credentials
+  Show error message
+end note
+
+note right of ActiveSession
+  User authenticated
+  Full system access based on role
+end note
+
+note right of SessionExpired
+  Session timed out
+  Requires re-authentication
+end note
+
+note right of Banned
+  User account banned
+  Access denied
+end note
+
+note right of SessionValidation
+  Periodic validation
+  to check user status
+end note
+
+@enduml

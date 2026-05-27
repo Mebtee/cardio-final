@@ -1,0 +1,79 @@
+@startuml object_diagram_patient_registration
+!theme plain
+title Object Diagram - Patient Registration Scenario
+
+object "patient1 : Patient" as patient1 {
+  id = 1
+  patientName = "John Doe"
+  patientId = "PAT0001"
+  contactNumber = "0911234567"
+  age = 45
+  gender = "male"
+  medicalHistory = "Hypertension, diabetes"
+  registeredBy = 3
+  status = "registered"
+  referredTo = null
+  createdAt = "2025-12-15 09:30:00"
+}
+
+object "reception1 : Reception" as reception1 {
+  id = 3
+  username = "reception1"
+  email = "reception@hospital.com"
+  role = "reception"
+  fullName = "Sarah Johnson"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "admin1 : Admin" as admin1 {
+  id = 1
+  username = "admin"
+  email = "admin@hospital.com"
+  role = "admin"
+  fullName = "System Administrator"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "notification1 : Notification" as notification1 {
+  id = 1
+  userId = 2
+  type = "patient_registered"
+  title = "New Patient Registered"
+  message = "Patient John Doe (PAT0001) has been registered"
+  isRead = false
+  createdAt = "2025-12-15 09:30:05"
+}
+
+object "generalDoctor1 : GeneralDoctor" as generalDoctor1 {
+  id = 2
+  username = "gendoc1"
+  email = "gendoc@hospital.com"
+  role = "general_doctor"
+  fullName = "Dr. Michael Smith"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+' Relationships
+reception1 --> patient1 : "registered"
+notification1 --> generalDoctor1 : "notifies"
+patient1 --> reception1 : "registeredBy"
+
+note right of patient1
+  Newly registered patient
+  awaiting triage by
+  general doctor
+end note
+
+note right of notification1
+  Notification sent to all
+  general doctors about
+  new patient registration
+end note
+
+@enduml

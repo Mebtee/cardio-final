@@ -1,0 +1,68 @@
+@startuml general_doctor_activity
+!theme plain
+title General Doctor Activity Diagram
+
+start
+
+:Login to System;
+
+if (Authentication Successful?) then (yes)
+  :Access Dashboard;
+  :View Registered Patients;
+  
+  if (Apply Filters?) then (yes)
+    :Set Date Filter;
+    :Set Status Filter;
+    :Apply Filters;
+    :Display Filtered Results;
+  else (no)
+    :Display All Registered Patients;
+  endif
+  
+  :Review Patient List;
+  
+  if (Select Patient for Referral?) then (yes)
+    :Click on Patient;
+    :Open Referral Dialog;
+    
+    :View Available Specialists;
+    
+    if (Specialists Available?) then (yes)
+      :Select Specialist Doctor;
+      :Review Specialist Info (Name, Specialty);
+      
+      if (Confirm Referral?) then (yes)
+        :Submit Referral;
+        :Update Patient Status to 'referred';
+        :Set referred_to field;
+        :Notify Specialist Doctor;
+        :Display Success Message;
+      else (no)
+        :Cancel Referral;
+      endif
+    else (no)
+      :Display "No Specialists Available";
+    endif
+    
+  else (no)
+    :Continue Monitoring;
+  endif
+  
+  if (Check Notifications?) then (yes)
+    :View Notification Bell;
+    :Read New Patient Alerts;
+    :Mark Notifications as Read;
+  endif
+  
+  if (Refresh Patient List?) then (yes)
+    :Reload Data from Database;
+    :Update Patient Display;
+  endif
+  
+else (no)
+  :Display Authentication Error;
+endif
+
+stop
+
+@enduml

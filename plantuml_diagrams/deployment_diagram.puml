@@ -1,0 +1,254 @@
+@startuml deployment_diagram
+!theme plain
+title Cardiomegaly Detection System - Deployment Diagram
+
+' Client Devices
+node "Client Devices" {
+  artifact "Web Browser" as browser {
+    component [React SPA] as react_spa
+    component [JavaScript Runtime] as js_runtime
+    component [Local Storage] as local_storage
+  }
+  
+  artifact "Mobile Browser" as mobile_browser {
+    component [Responsive UI] as responsive_ui
+    component [PWA Support] as pwa_support
+  }
+}
+
+' Load Balancer / Reverse Proxy
+node "Load Balancer" as load_balancer <<device>> {
+  artifact "Nginx" as nginx {
+    component [SSL Termination] as ssl_term
+    component [Static File Serving] as static_files
+    component [Request Routing] as routing
+    component [Rate Limiting] as rate_limit
+  }
+}
+
+' Application Server Cluster
+node "Application Server 1" as app_server1 <<server>> {
+  artifact "Flask Application" as flask_app1 {
+    component [API Endpoints] as api_endpoints1
+    component [Authentication] as auth1
+    component [Business Logic] as business_logic1
+    component [Session Management] as session_mgmt1
+  }
+  
+  artifact "Python Runtime" as python_runtime1 {
+    component [Flask Framework] as flask_fw1
+    component [PyTorch] as pytorch1
+    component [Dependencies] as deps1
+  }
+}
+
+node "Application Server 2" as app_server2 <<server>> {
+  artifact "Flask Application" as flask_app2 {
+    component [API Endpoints] as api_endpoints2
+    component [Authentication] as auth2
+    component [Business Logic] as business_logic2
+    component [Session Management] as session_mgmt2
+  }
+  
+  artifact "Python Runtime" as python_runtime2 {
+    component [Flask Framework] as flask_fw2
+    component [PyTorch] as pytorch2
+    component [Dependencies] as deps2
+  }
+}
+
+' AI/ML Processing Server
+node "AI Processing Server" as ai_server <<server>> {
+  artifact "AI Model Service" as ai_service {
+    component [Cardiomegaly Model] as cardio_model
+    component [X-ray Filter Model] as filter_model
+    component [Image Preprocessing] as img_preprocess
+    component [Prediction Engine] as prediction_engine
+  }
+  
+  artifact "GPU Runtime" as gpu_runtime {
+    component [CUDA Support] as cuda
+    component [PyTorch GPU] as pytorch_gpu
+    component [Model Cache] as model_cache
+  }
+}
+
+' Database Server
+node "Database Server" as db_server <<database>> {
+  artifact "MySQL Database" as mysql_db {
+    component [User Data] as user_data
+    component [Patient Records] as patient_records
+    component [X-ray Requests] as xray_requests
+    component [Predictions] as predictions
+    component [Edit Requests] as edit_requests
+    component [Notifications] as notifications
+  }
+  
+  artifact "Database Engine" as db_engine {
+    component [InnoDB Storage] as innodb
+    component [Query Optimizer] as query_opt
+    component [Connection Pool] as conn_pool
+    component [Backup System] as backup_sys
+  }
+}
+
+' File Storage Server
+node "File Storage Server" as file_server <<storage>> {
+  artifact "File System" as file_system {
+    component [X-ray Images] as xray_images
+    component [Processed Images] as processed_images
+    component [Model Files] as model_files
+    component [Backup Files] as backup_files
+  }
+  
+  artifact "Storage Management" as storage_mgmt {
+    component [File Indexing] as file_index
+    component [Compression] as compression
+    component [Cleanup Service] as cleanup
+  }
+}
+
+' Email Server
+node "Email Server" as email_server <<server>> {
+  artifact "SMTP Service" as smtp_service {
+    component [Mail Queue] as mail_queue
+    component [Template Engine] as template_engine
+    component [Delivery Service] as delivery_service
+  }
+}
+
+' Monitoring & Logging
+node "Monitoring Server" as monitor_server <<server>> {
+  artifact "System Monitoring" as sys_monitor {
+    component [Performance Metrics] as perf_metrics
+    component [Health Checks] as health_checks
+    component [Alert System] as alert_system
+    component [Log Aggregation] as log_aggregation
+  }
+}
+
+' Backup Server
+node "Backup Server" as backup_server <<storage>> {
+  artifact "Backup System" as backup_system {
+    component [Database Backups] as db_backups
+    component [File Backups] as file_backups
+    component [System Snapshots] as sys_snapshots
+    component [Recovery Tools] as recovery_tools
+  }
+}
+
+' Network Connections
+browser --> nginx : "HTTPS (443)"
+mobile_browser --> nginx : "HTTPS (443)"
+
+nginx --> flask_app1 : "HTTP (5000)"
+nginx --> flask_app2 : "HTTP (5000)"
+
+flask_app1 --> mysql_db : "MySQL (3306)"
+flask_app2 --> mysql_db : "MySQL (3306)"
+
+flask_app1 --> ai_service : "HTTP API (8080)"
+flask_app2 --> ai_service : "HTTP API (8080)"
+
+flask_app1 --> file_system : "File I/O"
+flask_app2 --> file_system : "File I/O"
+
+flask_app1 --> smtp_service : "SMTP (587)"
+flask_app2 --> smtp_service : "SMTP (587)"
+
+ai_service --> file_system : "Model & Image Access"
+
+sys_monitor --> flask_app1 : "Health Check"
+sys_monitor --> flask_app2 : "Health Check"
+sys_monitor --> mysql_db : "DB Monitoring"
+sys_monitor --> ai_service : "AI Monitoring"
+
+backup_system --> mysql_db : "DB Backup"
+backup_system --> file_system : "File Backup"
+
+' Network Zones
+package "DMZ (Demilitarized Zone)" {
+  load_balancer
+}
+
+package "Application Tier" {
+  app_server1
+  app_server2
+  ai_server
+}
+
+package "Data Tier" {
+  db_server
+  file_server
+}
+
+package "External Services" {
+  email_server
+}
+
+package "Management Tier" {
+  monitor_server
+  backup_server
+}
+
+' Deployment Specifications
+note right of app_server1
+  **Server Specifications:**
+  - OS: Ubuntu 22.04 LTS
+  - CPU: 4 cores, 2.4GHz
+  - RAM: 8GB
+  - Storage: 100GB SSD
+  - Python: 3.9+
+  - Flask: 2.3+
+end note
+
+note right of ai_server
+  **AI Server Specifications:**
+  - OS: Ubuntu 22.04 LTS
+  - CPU: 8 cores, 3.2GHz
+  - RAM: 32GB
+  - GPU: NVIDIA RTX 4080
+  - Storage: 500GB NVMe SSD
+  - CUDA: 11.8+
+  - PyTorch: 2.0+
+end note
+
+note right of db_server
+  **Database Specifications:**
+  - OS: Ubuntu 22.04 LTS
+  - CPU: 8 cores, 2.8GHz
+  - RAM: 16GB
+  - Storage: 1TB SSD RAID 1
+  - MySQL: 8.0+
+  - Backup: Daily automated
+end note
+
+note right of nginx
+  **Load Balancer Config:**
+  - SSL/TLS Termination
+  - HTTP/2 Support
+  - Gzip Compression
+  - Static File Caching
+  - Rate Limiting: 100 req/min
+  - Health Check Intervals
+end note
+
+' Security Annotations
+note top of load_balancer
+  **Security Layer:**
+  - SSL/TLS Encryption
+  - WAF (Web Application Firewall)
+  - DDoS Protection
+  - IP Whitelisting
+end note
+
+' Scalability Annotations
+note bottom of app_server1
+  **Horizontal Scaling:**
+  - Auto-scaling based on CPU/Memory
+  - Load balancer health checks
+  - Session persistence via database
+  - Stateless application design
+end note
+
+@enduml

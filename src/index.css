@@ -1,0 +1,365 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Medical Blue Theme */
+    --background: 210 25% 98%;
+    --foreground: 215 25% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 25% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 25% 15%;
+
+    /* Primary: Medical Blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Soft Teal */
+    --secondary: 178 84% 32%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted: Clean Gray */
+    --muted: 215 20% 95%;
+    --muted-foreground: 215 16% 47%;
+
+    /* Accent: Light Teal */
+    --accent: 178 60% 90%;
+    --accent-foreground: 178 84% 25%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 215 20% 88%;
+    --input: 215 20% 92%;
+    --ring: 217 91% 60%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    /* Dark Medical Theme */
+    --background: 215 28% 8%;
+    --foreground: 210 20% 95%;
+
+    --card: 215 28% 10%;
+    --card-foreground: 210 20% 95%;
+
+    --popover: 215 28% 10%;
+    --popover-foreground: 210 20% 95%;
+
+    /* Primary: Medical Blue (darker) */
+    --primary: 217 91% 55%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Soft Teal (darker) */
+    --secondary: 178 84% 28%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* Muted: Clean Gray (darker) */
+    --muted: 215 28% 15%;
+    --muted-foreground: 215 16% 65%;
+
+    /* Accent: Dark Teal */
+    --accent: 178 60% 20%;
+    --accent-foreground: 178 60% 90%;
+
+    --destructive: 0 84% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 142 76% 32%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 45%;
+    --warning-foreground: 0 0% 100%;
+
+    --border: 215 28% 18%;
+    --input: 215 28% 15%;
+    --ring: 217 91% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-medium;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Modern Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromBottom {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Utility classes for animations */
+.animate-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.slide-in-from-bottom-4 {
+  animation: slideInFromBottom 0.5s ease-out;
+}
+
+.slide-in-from-top-4 {
+  animation: slideInFromTop 0.5s ease-out;
+}
+
+.slide-in-from-left-4 {
+  animation: slideInFromLeft 0.5s ease-out;
+}
+
+.slide-in-from-right-4 {
+  animation: slideInFromRight 0.5s ease-out;
+}
+
+.scale-in {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.duration-300 {
+  animation-duration: 300ms;
+}
+
+.duration-500 {
+  animation-duration: 500ms;
+}
+
+@layer components {
+  /* Medical Card Styles */
+  .medical-card {
+    @apply bg-card border border-border rounded-xl shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .medical-card-header {
+    @apply border-b border-border/50 bg-gradient-to-r from-primary/5 to-secondary/5;
+  }
+
+  /* Modern Card with gradient hover */
+  .card-modern {
+    @apply rounded-xl bg-card border border-border/50 shadow-sm hover:shadow-lg hover:border-primary/30 transition-all duration-300;
+  }
+
+  /* Medical Button Variants */
+  .btn-medical-primary {
+    @apply bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .btn-medical-secondary {
+    @apply bg-secondary hover:bg-secondary/90 text-secondary-foreground shadow-sm hover:shadow-md transition-all duration-200;
+  }
+
+  .btn-medical-outline {
+    @apply border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200;
+  }
+
+  /* Modern button with smooth transitions */
+  .btn-modern {
+    @apply relative inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-300 hover:shadow-lg active:scale-95;
+  }
+
+  /* Medical Status Indicators */
+  .status-positive {
+    @apply bg-red-50 text-red-700 border border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800;
+  }
+
+  .status-negative {
+    @apply bg-green-50 text-green-700 border border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800;
+  }
+
+  .status-pending {
+    @apply bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/20 dark:text-amber-300 dark:border-amber-800;
+  }
+
+  .status-completed {
+    @apply bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800;
+  }
+
+  /* Medical Form Styles */
+  .medical-input {
+    @apply border-2 border-input focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200;
+  }
+
+  /* Modern input with better styling */
+  .input-modern {
+    @apply rounded-lg border border-border/50 bg-background/50 hover:bg-background transition-all duration-200 focus:ring-2 focus:ring-primary/30 focus:border-primary;
+  }
+
+  /* Medical Navigation */
+  .medical-nav {
+    @apply bg-card/95 backdrop-blur-sm border-b border-border/50 shadow-sm;
+  }
+
+  /* Modern navigation with glass effect */
+  .nav-modern {
+    @apply sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl transition-all duration-300;
+  }
+
+  /* Medical Dashboard Grid */
+  .medical-grid {
+    @apply grid gap-6 md:gap-8;
+  }
+
+  /* Medical Typography */
+  .medical-heading {
+    @apply font-semibold text-foreground tracking-tight;
+  }
+
+  .medical-subheading {
+    @apply font-medium text-muted-foreground;
+  }
+
+  /* Modern typography */
+  .heading-modern {
+    @apply text-3xl md:text-4xl font-bold tracking-tight;
+  }
+
+  .subheading-modern {
+    @apply text-lg text-muted-foreground leading-relaxed;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent;
+  }
+
+  /* Smooth hover effects */
+  .hover-lift {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+
+  .hover-scale {
+    @apply transition-all duration-300 hover:scale-105;
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    @apply bg-background/50 backdrop-blur-md border border-border/30;
+  }
+
+  /* Modern shadow utilities */
+  .shadow-soft {
+    @apply shadow-sm;
+  }
+
+  .shadow-medium {
+    @apply shadow-md;
+  }
+
+  .shadow-elevated {
+    @apply shadow-lg;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    @apply transition-all duration-200;
+  }
+}

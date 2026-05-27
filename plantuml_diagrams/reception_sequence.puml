@@ -1,0 +1,60 @@
+@startuml reception_sequence
+!theme plain
+title Reception Sequence Diagram - Patient Registration & Edit Management
+
+actor Reception
+participant "System" as sys
+participant "Database" as db
+participant "Notification" as notif
+
+== Login ==
+Reception -> sys: Login
+sys -> db: Validate Credentials
+db -> sys: Return User Data
+sys -> Reception: Display Dashboard
+
+== Register New Patient ==
+Reception -> sys: Register New Patient
+sys -> Reception: Display Registration Form
+Reception -> sys: Submit Patient Data
+sys -> sys: Generate Patient ID (PAT####)
+sys -> db: Insert Patient Record
+db -> sys: Return Patient ID
+sys -> notif: Notify General Doctors
+sys -> Reception: Registration Success
+
+== Search Patient ==
+Reception -> sys: Search Patient
+Reception -> sys: Enter Search Criteria (name/ID/phone)
+sys -> db: Query Patient Records
+db -> sys: Return Search Results
+sys -> Reception: Display Patient List
+
+== Request Patient Edit ==
+Reception -> sys: Select Patient
+Reception -> sys: Request Patient Edit
+Reception -> sys: Enter Edit Reason
+sys -> db: Create Edit Request
+sys -> db: Store Original Patient Data
+db -> sys: Return Request ID
+sys -> Reception: Edit Request Submitted
+
+== Submit Patient Changes ==
+Reception -> sys: View Edit Requests
+sys -> db: Query My Edit Requests
+db -> sys: Return Request List
+sys -> Reception: Display Requests
+
+alt Request Approved for Edit
+  Reception -> sys: Edit Patient Data
+  sys -> Reception: Display Edit Form with Original Data
+  Reception -> sys: Submit Changes
+  sys -> db: Store Proposed Changes
+  sys -> db: Update Request Status to 'changes_submitted'
+  db -> sys: Confirm Update
+  sys -> Reception: Changes Submitted for Final Approval
+else Request Not Approved
+  sys -> Reception: Request Still Pending
+end
+
+@enduml

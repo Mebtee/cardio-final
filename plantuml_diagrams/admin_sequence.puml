@@ -1,0 +1,63 @@
+@startuml admin_sequence
+!theme plain
+title Admin Sequence Diagram - User Management & System Overview
+
+actor Admin
+participant "System" as sys
+participant "Database" as db
+participant "Notification" as notif
+
+== Login ==
+Admin -> sys: Login
+sys -> db: Validate Credentials
+db -> sys: Return User Data
+sys -> Admin: Display Dashboard
+
+== View System Overview ==
+Admin -> sys: View System Overview
+sys -> db: Query System Metrics
+sys -> db: Query User Statistics
+sys -> db: Query Diagnosis Data
+db -> sys: Return Analytics Data
+sys -> Admin: Display Charts & Statistics
+
+== Manage Users ==
+Admin -> sys: Manage Users
+sys -> db: Query User List
+db -> sys: Return Users
+sys -> Admin: Display User Management
+
+Admin -> sys: Create New User
+sys -> db: Insert User Record
+db -> sys: Confirm Creation
+sys -> Admin: Success Message
+
+Admin -> sys: Ban User
+sys -> db: Update User Status (is_banned=1)
+db -> sys: Confirm Update
+sys -> Admin: User Banned Successfully
+
+== Review Edit Requests ==
+Admin -> sys: Review Edit Requests
+sys -> db: Query Pending Requests
+db -> sys: Return Request List
+sys -> Admin: Display Requests
+
+Admin -> sys: Approve Edit Request
+alt First Approval
+  sys -> db: Update Request Status to 'approved_for_edit'
+  sys -> notif: Notify Reception User
+else Final Approval
+  sys -> db: Update Patient Data
+  sys -> db: Update Request Status to 'approved_final'
+end
+db -> sys: Confirm Updates
+sys -> Admin: Approval Confirmation
+
+== Download Diagnosis Data ==
+Admin -> sys: Download Images
+sys -> db: Query Prediction Records
+db -> sys: Return Image References
+sys -> Admin: Provide Download Links
+
+@enduml

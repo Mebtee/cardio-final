@@ -1,0 +1,97 @@
+@startuml object_diagram_user_management
+!theme plain
+title Object Diagram - User Management Scenario
+
+object "admin4 : Admin" as admin4 {
+  id = 1
+  username = "admin"
+  email = "admin@hospital.com"
+  role = "admin"
+  fullName = "System Administrator"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "newDoctor : SpecialistDoctor" as newDoctor {
+  id = 7
+  username = "cardio2"
+  email = "cardio2@hospital.com"
+  role = "doctor"
+  fullName = "Dr. Sarah Williams"
+  specialty = "Cardiology"
+  isBanned = false
+  createdAt = "2025-12-15 12:00:00"
+}
+
+object "bannedUser : Reception" as bannedUser {
+  id = 8
+  username = "temp_reception"
+  email = "temp@hospital.com"
+  role = "reception"
+  fullName = "Temporary Staff"
+  specialty = null
+  isBanned = true
+  createdAt = "2025-12-10 09:00:00"
+}
+
+object "activeSession1 : UserSession" as activeSession1 {
+  userId = 1
+  sessionId = "sess_abc123"
+  loginTime = "2025-12-15 08:00:00"
+  lastActivity = "2025-12-15 12:30:00"
+  ipAddress = "192.168.1.100"
+  userAgent = "Mozilla/5.0 Chrome/120.0"
+  isActive = true
+}
+
+object "expiredSession : UserSession" as expiredSession {
+  userId = 8
+  sessionId = "sess_xyz789"
+  loginTime = "2025-12-15 10:00:00"
+  lastActivity = "2025-12-15 10:15:00"
+  ipAddress = "192.168.1.105"
+  userAgent = "Mozilla/5.0 Firefox/121.0"
+  isActive = false
+}
+
+object "passwordResetToken : Object" as passwordResetToken {
+  userId = 7
+  token = "reset_token_456"
+  expiresAt = "2025-12-15 13:00:00"
+  used = false
+  createdAt = "2025-12-15 12:00:00"
+}
+
+' Relationships
+admin4 --> newDoctor : "created"
+admin4 --> bannedUser : "banned"
+admin4 --> activeSession1 : "manages"
+newDoctor --> passwordResetToken : "requested"
+bannedUser --> expiredSession : "terminated"
+
+note right of newDoctor
+  Newly created specialist
+  doctor account with
+  cardiology specialty
+end note
+
+note right of bannedUser
+  Banned user account
+  with terminated session
+  and blocked access
+end note
+
+note right of activeSession1
+  Active admin session
+  with recent activity
+  and valid authentication
+end note
+
+note right of passwordResetToken
+  Password reset token
+  for new doctor account
+  expires in 1 hour
+end note
+
+@enduml

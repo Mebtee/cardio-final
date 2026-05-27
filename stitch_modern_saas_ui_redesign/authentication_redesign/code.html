@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | CardioAI Clinical Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#dae2fd",
+                        "on-tertiary-fixed": "#001e2c",
+                        "surface-dim": "#cbdbf5",
+                        "surface-variant": "#d3e4fe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "secondary": "#565e74",
+                        "inverse-primary": "#b7c4ff",
+                        "outline": "#737688",
+                        "on-primary-fixed": "#001452",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dde1ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "inverse-surface": "#213145",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#005474",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#c4e7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#006e95",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c647a",
+                        "surface-tint": "#004ced",
+                        "surface-container-highest": "#d3e4fe",
+                        "background": "#f8f9ff",
+                        "primary": "#003ec7",
+                        "on-tertiary-container": "#caeaff",
+                        "surface": "#f8f9ff",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#dfe3ff",
+                        "on-surface-variant": "#434656",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#131b2e",
+                        "outline-variant": "#c3c5d9",
+                        "secondary-container": "#dae2fd",
+                        "primary-container": "#0052ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "section-gap": "48px",
+                        "margin-page": "32px",
+                        "container-max": "1280px",
+                        "element-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .animate-subtle-glow {
+            animation: glow 8s infinite alternate;
+        }
+        @keyframes glow {
+            from { filter: blur(40px) opacity(0.1); transform: scale(1); }
+            to { filter: blur(60px) opacity(0.2); transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-surface font-body-md text-on-surface selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden min-h-screen flex flex-col">
+<!-- Background Elements -->
+<div class="fixed inset-0 z-[-1] overflow-hidden pointer-events-none">
+<div class="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-primary rounded-full animate-subtle-glow opacity-10"></div>
+<div class="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-tertiary rounded-full animate-subtle-glow opacity-10" style="animation-delay: -4s;"></div>
+</div>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col items-center justify-center px-gutter py-section-gap">
+<!-- Logo Branding -->
+<div class="mb-element-gap text-center group">
+<div class="inline-flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[40px]" style="font-variation-settings: 'FILL' 1;">cardiology</span>
+<h1 class="font-headline-md text-headline-md font-bold text-primary tracking-tight">CardioAI</h1>
+</div>
+<p class="font-label-md text-label-md text-secondary tracking-widest uppercase">Clinician Portal</p>
+</div>
+<!-- Login Card -->
+<div class="w-full max-w-[440px] glass-card border border-outline-variant/30 rounded-xl p-8 shadow-[0_20px_50px_rgba(0,0,0,0.05)] relative overflow-hidden">
+<!-- Decorative Gradient Line -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-tertiary to-primary opacity-80"></div>
+<header class="mb-8">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2">Secure Access</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Enter your clinical credentials to access the Cardiomegaly Detection System.</p>
+</header>
+<form action="#" class="space-y-6">
+<!-- Username -->
+<div class="space-y-2">
+<label class="font-label-md text-label-md text-on-surface-variant block ml-1" for="username">USERNAME</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">person</span>
+<input class="w-full h-12 pl-10 pr-4 bg-white border border-outline-variant rounded-lg font-body-md text-on-surface focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-200 outline-none placeholder:text-outline-variant/60" id="username" placeholder="Clinical ID or Email" type="text"/>
+</div>
+</div>
+<!-- Password -->
+<div class="space-y-2">
+<div class="flex justify-between items-center px-1">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="password">PASSWORD</label>
+<a class="font-label-md text-label-md text-primary font-bold hover:underline" href="#">Forgot password?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">lock</span>
+<input class="w-full h-12 pl-10 pr-12 bg-white border border-outline-variant rounded-lg font-body-md text-on-surface focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all duration-200 outline-none placeholder:text-outline-variant/60" id="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Login Button -->
+<button class="w-full h-12 bg-primary text-on-primary font-bold font-body-md rounded-lg shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2 group" type="submit">
+<span>Login to Dashboard</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</form>
+<!-- Compliance Badges -->
+<div class="mt-10 pt-6 border-t border-outline-variant/30 flex flex-wrap justify-center items-center gap-x-6 gap-y-3 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-label-md text-label-md font-bold tracking-tight text-on-surface">HIPAA COMPLIANT</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-md text-label-md font-bold tracking-tight text-on-surface">FDA APPROVED</span>
+</div>
+</div>
+</div>
+<!-- System Status Image / Reference Placeholder -->
+<div class="mt-12 w-full max-w-[800px] h-[300px] relative rounded-2xl overflow-hidden border border-outline-variant/20 shadow-xl group">
+<img alt="Clinical Interface Analysis" class="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" data-alt="A high-resolution clinical imaging interface displaying an advanced thoracic X-ray analysis for cardiomegaly. The screen is filled with precise medical data visualizations, including heatmaps of lung density and heart measurements highlighted in a clean medical blue. The environment is a professional, dimly lit radiology suite with a focus on extreme clarity and sophisticated SaaS design aesthetics. The mood is highly technical, reliable, and clinically precise." src="https://lh3.googleusercontent.com/aida-public/AB6AXuApHoOjtJ5sRFwR_kb9R0iE3uYf_oHemJUiRlZFmXEdc9u_EEpqsvT9-gfUB2OXFXXrfEsLkfMacKsvKxcaMaKpZNv0A-sx2Y5jrbnIE_DnpVyhQsI4EN5GWxK0s6ZHxm4oe090fHL8veRprHTYpQ_7D2AgMC7luPzXDapZFvNblvaz-qxp5GP_uq_pS2JAZ_XmDNbOGQo36wRBdm-OQw435TUHQIN5m_ZrAdLUBM_ZhUVr0DTMFFosVkpE7Lea8OuWsyOYEKRonOcT"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="bg-white/90 backdrop-blur-md px-4 py-3 rounded-xl border border-outline-variant/30">
+<p class="font-label-md text-label-md text-primary font-bold">LATEST UPDATES</p>
+<p class="font-body-sm text-body-sm text-on-surface mt-1">v4.2.1 Core Analysis Engine: Enhanced Detection Precision</p>
+</div>
+<div class="flex gap-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-on-tertiary-fixed border-t border-outline-variant w-full">
+<div class="max-w-container-max mx-auto px-gutter py-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+<div class="space-y-2">
+<div class="font-headline-sm font-black text-on-surface">CardioAI</div>
+<p class="font-body-sm text-body-sm text-secondary">© 2024 CardioAI Systems. Clinical Grade Precision.</p>
+</div>
+<div class="flex flex-wrap gap-x-12 gap-y-6">
+<div class="space-y-3">
+<h4 class="font-label-md text-label-md font-bold text-on-surface uppercase tracking-wider">Medical Resources</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Integration Guide</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Case Studies</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Research Papers</a></li>
+</ul>
+</div>
+<div class="space-y-3">
+<h4 class="font-label-md text-label-md font-bold text-on-surface uppercase tracking-wider">Quick Access</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Support Portal</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Contact Clinical Team</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">API Docs</a></li>
+</ul>
+</div>
+<div class="space-y-3">
+<h4 class="font-label-md text-label-md font-bold text-on-surface uppercase tracking-wider">Legal</h4>
+<ul class="space-y-2">
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Privacy Policy</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">Terms of Service</a></li>
+<li><a class="font-body-sm text-body-sm text-secondary hover:text-primary transition-colors" href="#">HIPAA Compliance</a></li>
+</ul>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        // Simple Interaction: Button Ripple-like Scale Effect
+        const loginBtn = document.querySelector('button[type="submit"]');
+        loginBtn.addEventListener('mousedown', () => loginBtn.classList.add('scale-95'));
+        loginBtn.addEventListener('mouseup', () => loginBtn.classList.remove('scale-95'));
+        loginBtn.addEventListener('mouseleave', () => loginBtn.classList.remove('scale-95'));
+
+        // Background movement on mouse move
+        document.addEventListener('mousemove', (e) => {
+            const blobs = document.querySelectorAll('.animate-subtle-glow');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            blobs[0].style.transform = `translate(${x * 40}px, ${y * 40}px)`;
+            blobs[1].style.transform = `translate(${x * -30}px, ${y * -30}px) scale(1.1)`;
+        });
+    </script>
+</body></html>

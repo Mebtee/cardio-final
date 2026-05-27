@@ -1,0 +1,109 @@
+@startuml object_diagram_edit_request
+!theme plain
+title Object Diagram - Patient Edit Request Workflow
+
+object "patient3 : Patient" as patient3 {
+  id = 3
+  patientName = "Robert Brown"
+  patientId = "PAT0003"
+  contactNumber = "0912345678"
+  age = 38
+  gender = "male"
+  medicalHistory = "No significant history"
+  registeredBy = 3
+  status = "registered"
+  referredTo = null
+  createdAt = "2025-12-14 14:30:00"
+}
+
+object "reception2 : Reception" as reception2 {
+  id = 6
+  username = "reception2"
+  email = "reception2@hospital.com"
+  role = "reception"
+  fullName = "Lisa Anderson"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "editRequest1 : PatientEditRequest" as editRequest1 {
+  id = 1
+  patientId = 3
+  requestedBy = 6
+  requestReason = "Patient provided updated contact information"
+  status = "approved_final"
+  originalData = "{\"contactNumber\": \"0912345678\", \"age\": 38}"
+  proposedChanges = "{\"contactNumber\": \"0987654321\", \"age\": 39}"
+  reviewedBy = 1
+  createdAt = "2025-12-15 11:00:00"
+  approvedAt = "2025-12-15 11:15:00"
+  submittedAt = "2025-12-15 11:30:00"
+  finalApprovedAt = "2025-12-15 11:45:00"
+}
+
+object "admin2 : Admin" as admin2 {
+  id = 1
+  username = "admin"
+  email = "admin@hospital.com"
+  role = "admin"
+  fullName = "System Administrator"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "notification4 : Notification" as notification4 {
+  id = 4
+  userId = 1
+  type = "edit_request"
+  title = "Patient Edit Request"
+  message = "Edit request for Robert Brown (PAT0003) needs review"
+  isRead = true
+  createdAt = "2025-12-15 11:00:05"
+}
+
+object "notification5 : Notification" as notification5 {
+  id = 5
+  userId = 6
+  type = "edit_approved"
+  title = "Edit Request Approved"
+  message = "Your edit request for Robert Brown has been approved"
+  isRead = true
+  createdAt = "2025-12-15 11:15:05"
+}
+
+object "notification6 : Notification" as notification6 {
+  id = 6
+  userId = 6
+  type = "changes_approved"
+  title = "Changes Applied"
+  message = "Patient data changes have been applied successfully"
+  isRead = false
+  createdAt = "2025-12-15 11:45:05"
+}
+
+' Relationships
+reception2 --> editRequest1 : "created"
+editRequest1 --> patient3 : "modifies"
+admin2 --> editRequest1 : "approved"
+notification4 --> admin2 : "notifies"
+notification5 --> reception2 : "notifies"
+notification6 --> reception2 : "notifies"
+
+note right of editRequest1
+  Complete edit workflow:
+  1. Reception requests edit
+  2. Admin approves for editing
+  3. Reception submits changes
+  4. Admin gives final approval
+  5. Changes applied to patient
+end note
+
+note right of patient3
+  Patient data will be
+  updated with new contact
+  number and corrected age
+end note
+
+@enduml

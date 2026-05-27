@@ -1,0 +1,410 @@
+@startuml persistence_diagram
+!theme plain
+title Cardiomegaly Detection System - Persistence Diagram
+
+' Application Layer
+package "Application Layer" {
+  class UserController {
+    + createUser()
+    + authenticateUser()
+    + updateUser()
+    + banUser()
+  }
+  
+  class PatientController {
+    + registerPatient()
+    + searchPatients()
+    + referPatient()
+    + updatePatientStatus()
+  }
+  
+  class XRayController {
+    + createXRayRequest()
+    + uploadImage()
+    + processAI()
+    + getResults()
+  }
+  
+  class EditRequestController {
+    + requestEdit()
+    + approveEdit()
+    + submitChanges()
+    + finalApproval()
+  }
+  
+  class NotificationController {
+    + sendNotification()
+    + markAsRead()
+    + getUnreadCount()
+  }
+}
+
+' Business Logic Layer
+package "Business Logic Layer" {
+  class UserService {
+    + validateCredentials()
+    + hashPassword()
+    + generateToken()
+    + checkPermissions()
+  }
+  
+  class PatientService {
+    + generatePatientId()
+    + validatePatientData()
+    + processReferral()
+    + trackStatus()
+  }
+  
+  class XRayService {
+    + validateImage()
+    + processAI()
+    + storeResults()
+    + notifyDoctor()
+  }
+  
+  class EditService {
+    + validateEditRequest()
+    + processApproval()
+    + applyChanges()
+    + auditTrail()
+  }
+  
+  class NotificationService {
+    + createNotification()
+    + routeByRole()
+    + trackDelivery()
+    + cleanup()
+  }
+}
+
+' Data Access Layer
+package "Data Access Layer" {
+  class UserRepository {
+    + findById(id)
+    + findByUsername(username)
+    + save(user)
+    + update(user)
+    + delete(id)
+    + findByRole(role)
+  }
+  
+  class PatientRepository {
+    + findById(id)
+    + findByPatientId(patientId)
+    + save(patient)
+    + update(patient)
+    + search(criteria)
+    + findByStatus(status)
+  }
+  
+  class XRayRepository {
+    + findById(id)
+    + save(request)
+    + update(request)
+    + findByDoctor(doctorId)
+    + findByStatus(status)
+    + findPending()
+  }
+  
+  class PredictionRepository {
+    + findById(id)
+    + save(prediction)
+    + findByRequest(requestId)
+    + findByDateRange(start, end)
+    + getStatistics()
+  }
+  
+  class EditRequestRepository {
+    + findById(id)
+    + save(request)
+    + update(request)
+    + findByStatus(status)
+    + findByUser(userId)
+    + findPending()
+  }
+  
+  class NotificationRepository {
+    + findById(id)
+    + save(notification)
+    + update(notification)
+    + findByUser(userId)
+    + findUnread(userId)
+    + markAsRead(id)
+  }
+}
+
+' Persistence Layer
+package "Persistence Layer" {
+  class DatabaseConnection {
+    + getConnection()
+    + closeConnection()
+    + beginTransaction()
+    + commit()
+    + rollback()
+  }
+  
+  class ConnectionPool {
+    + getConnection()
+    + releaseConnection()
+    + validateConnection()
+    + cleanup()
+  }
+  
+  class QueryBuilder {
+    + select()
+    + insert()
+    + update()
+    + delete()
+    + where()
+    + join()
+  }
+  
+  class TransactionManager {
+    + beginTransaction()
+    + commit()
+    + rollback()
+    + savepoint()
+  }
+}
+
+' File Storage Layer
+package "File Storage Layer" {
+  class FileManager {
+    + saveFile(file, path)
+    + deleteFile(path)
+    + getFile(path)
+    + validateFile(file)
+  }
+  
+  class ImageProcessor {
+    + validateXRay(image)
+    + resizeImage(image)
+    + compressImage(image)
+    + generateThumbnail(image)
+  }
+  
+  class StorageManager {
+    + allocateSpace()
+    + cleanup()
+    + backup()
+    + restore()
+  }
+}
+
+' Cache Layer
+package "Cache Layer" {
+  class SessionCache {
+    + storeSession(sessionId, data)
+    + getSession(sessionId)
+    + invalidateSession(sessionId)
+    + cleanup()
+  }
+  
+  class ModelCache {
+    + loadModel(modelName)
+    + getModel(modelName)
+    + updateModel(modelName)
+    + clearCache()
+  }
+  
+  class QueryCache {
+    + cacheResult(query, result)
+    + getResult(query)
+    + invalidateCache(pattern)
+    + cleanup()
+  }
+}
+
+' External Storage
+database "MySQL Database" as mysql {
+  table "users" {
+    id (PK)
+    username
+    password
+    email
+    role
+    ...
+  }
+  
+  table "patients" {
+    id (PK)
+    patient_name
+    patient_id
+    status
+    registered_by (FK)
+    ...
+  }
+  
+  table "xray_requests" {
+    id (PK)
+    doctor_id (FK)
+    patient_name
+    status
+    ...
+  }
+  
+  table "predictions" {
+    id (PK)
+    request_id (FK)
+    prediction
+    confidence
+    ...
+  }
+  
+  table "patient_edit_requests" {
+    id (PK)
+    patient_id (FK)
+    requested_by (FK)
+    status
+    ...
+  }
+  
+  table "notifications" {
+    id (PK)
+    user_id (FK)
+    type
+    message
+    ...
+  }
+}
+
+folder "File System" as filesystem {
+  folder "uploads/" {
+    file "xray_images/"
+    file "processed_images/"
+    file "thumbnails/"
+  }
+  
+  folder "models/" {
+    file "cardiomegaly_model.pth"
+    file "xray_filter_model.pth"
+  }
+  
+  folder "backups/" {
+    file "daily_backups/"
+    file "weekly_backups/"
+  }
+}
+
+cloud "External Services" as external {
+  node "Email Server" {
+    component [SMTP Service]
+    component [Mail Queue]
+  }
+  
+  node "Backup Storage" {
+    component [Cloud Backup]
+    component [Archive Storage]
+  }
+}
+
+' Relationships - Application to Business Logic
+UserController --> UserService
+PatientController --> PatientService
+XRayController --> XRayService
+EditRequestController --> EditService
+NotificationController --> NotificationService
+
+' Relationships - Business Logic to Data Access
+UserService --> UserRepository
+PatientService --> PatientRepository
+XRayService --> XRayRepository
+XRayService --> PredictionRepository
+EditService --> EditRequestRepository
+NotificationService --> NotificationRepository
+
+' Relationships - Data Access to Persistence
+UserRepository --> DatabaseConnection
+PatientRepository --> DatabaseConnection
+XRayRepository --> DatabaseConnection
+PredictionRepository --> DatabaseConnection
+EditRequestRepository --> DatabaseConnection
+NotificationRepository --> DatabaseConnection
+
+' Relationships - Persistence Layer Internal
+DatabaseConnection --> ConnectionPool
+DatabaseConnection --> QueryBuilder
+DatabaseConnection --> TransactionManager
+
+' Relationships - File Storage
+XRayService --> FileManager
+XRayService --> ImageProcessor
+FileManager --> StorageManager
+
+' Relationships - Cache Layer
+UserService --> SessionCache
+XRayService --> ModelCache
+UserRepository --> QueryCache
+PatientRepository --> QueryCache
+
+' Relationships - External Storage
+DatabaseConnection --> mysql
+FileManager --> filesystem
+NotificationService --> external
+
+' Data Flow Annotations
+note right of UserController
+  **Request Flow:**
+  1. HTTP Request
+  2. Controller Processing
+  3. Business Logic
+  4. Data Access
+  5. Database Operation
+  6. Response
+end note
+
+note right of XRayService
+  **AI Processing Flow:**
+  1. Image Upload
+  2. File Validation
+  3. AI Model Loading
+  4. Prediction Generation
+  5. Result Storage
+  6. Notification
+end note
+
+note right of DatabaseConnection
+  **Transaction Management:**
+  - ACID Compliance
+  - Connection Pooling
+  - Query Optimization
+  - Error Handling
+  - Rollback Support
+end note
+
+note right of FileManager
+  **File Operations:**
+  - Upload Validation
+  - Storage Allocation
+  - Backup Management
+  - Cleanup Processes
+  - Security Checks
+end note
+
+' Performance Annotations
+note bottom of ConnectionPool
+  **Performance Features:**
+  - Connection Reuse
+  - Pool Size Management
+  - Timeout Handling
+  - Health Monitoring
+end note
+
+note bottom of QueryCache
+  **Caching Strategy:**
+  - Frequently Used Queries
+  - Time-based Expiration
+  - Memory Management
+  - Cache Invalidation
+end note
+
+' Security Annotations
+note top of UserService
+  **Security Measures:**
+  - Password Hashing (bcrypt)
+  - Session Management
+  - Role-based Access
+  - Input Validation
+end note
+
+@enduml

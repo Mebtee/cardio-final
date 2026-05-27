@@ -1,0 +1,135 @@
+@startuml collaboration_diagram
+!theme plain
+title Cardiomegaly Detection System - Complete System Collaboration Diagram
+
+' System Actors
+object Reception
+object "General Doctor" as GD
+object "Specialist Doctor" as SD
+object "X-ray Technician" as Tech
+object Admin
+
+' Core System Components
+object "Patient System" as PS
+object "X-ray System" as XRS
+object "AI Engine" as AI
+object "Notification Hub" as NH
+object "Admin System" as AS
+object Database
+object "File Storage" as FS
+
+' === PATIENT WORKFLOW ===
+' 1. Patient Registration
+Reception --> PS : 1: registerPatient()
+PS --> Database : 2: storePatient()
+PS --> NH : 3: notifyDoctors()
+
+' 2. Patient Triage
+NH --> GD : 4: newPatientAlert()
+GD --> PS : 5: viewPatients()
+GD --> PS : 6: referToSpecialist()
+PS --> NH : 7: notifySpecialist()
+
+' 3. X-ray Request
+NH --> SD : 8: referralAlert()
+SD --> XRS : 9: createXRayRequest()
+XRS --> Database : 10: storeRequest()
+XRS --> NH : 11: notifyTechnician()
+
+' 4. X-ray Processing
+NH --> Tech : 12: requestAlert()
+Tech --> XRS : 13: uploadImage()
+XRS --> FS : 14: storeImage()
+XRS --> AI : 15: analyzeImage()
+AI --> Database : 16: storePrediction()
+AI --> NH : 17: notifyDoctor()
+
+' 5. Results Review
+NH --> SD : 18: resultReady()
+SD --> XRS : 19: viewResults()
+XRS --> Database : 20: queryResults()
+
+' === ADMINISTRATIVE WORKFLOW ===
+' 6. System Monitoring
+Admin --> AS : 21: viewDashboard()
+AS --> Database : 22: getMetrics()
+AS --> Admin : 23: displayAnalytics()
+
+' 7. User Management
+Admin --> AS : 24: manageUsers()
+AS --> Database : 25: updateUsers()
+
+' 8. Edit Request Workflow
+Reception --> PS : 26: requestEdit()
+PS --> NH : 27: notifyAdmin()
+NH --> Admin : 28: editAlert()
+Admin --> AS : 29: reviewRequest()
+AS --> PS : 30: approveEdit()
+PS --> NH : 31: notifyReception()
+
+' === DATA FLOWS ===
+' Core Data Operations
+Database <--> PS : Patient Data
+Database <--> XRS : Request Data
+Database <--> AI : Prediction Data
+Database <--> AS : System Data
+FS <--> XRS : Image Files
+FS <--> AI : Model Files
+
+' Notification Flows
+NH --> Reception : Status Updates
+NH --> GD : Patient Alerts
+NH --> SD : Request & Result Alerts
+NH --> Tech : Processing Alerts
+NH --> Admin : System Alerts
+
+' Key Process Annotations
+note right of PS
+  **Patient Management**
+  - Registration (PAT#### IDs)
+  - Status tracking
+  - Referral workflow
+  - Edit requests
+end note
+
+note right of XRS
+  **X-ray Processing**
+  - Request creation
+  - Image upload (JPEG/PNG)
+  - Status tracking
+  - Result delivery
+end note
+
+note right of AI
+  **AI Analysis**
+  - Image validation
+  - Cardiomegaly detection
+  - Confidence scoring
+  - Result storage
+end note
+
+note right of AS
+  **Administration**
+  - User management
+  - System monitoring
+  - Edit approvals
+  - Analytics dashboard
+end note
+
+note right of NH
+  **Notifications**
+  - Role-based alerts
+  - Event-driven messaging
+  - Status updates
+  - System communications
+end note
+
+' Workflow Annotations
+note on link #1 : Auto-generated\nPatient ID
+note on link #6 : Specialist\nReferral
+note on link #9 : X-ray Order\nCreation
+note on link #15 : AI Cardiomegaly\nDetection
+note on link #23 : Real-time\nDashboard
+note on link #29 : Edit Request\nApproval
+
+@enduml

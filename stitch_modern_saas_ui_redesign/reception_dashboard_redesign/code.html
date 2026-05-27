@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CardioAI Pro - Patient Registration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#dae2fd",
+                        "on-tertiary-fixed": "#001e2c",
+                        "surface-dim": "#cbdbf5",
+                        "surface-variant": "#d3e4fe",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#3f465c",
+                        "secondary": "#565e74",
+                        "inverse-primary": "#b7c4ff",
+                        "outline": "#737688",
+                        "on-primary-fixed": "#001452",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "on-primary": "#ffffff",
+                        "primary-fixed": "#dde1ff",
+                        "secondary-fixed-dim": "#bec6e0",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#e5eeff",
+                        "inverse-surface": "#213145",
+                        "on-background": "#0b1c30",
+                        "tertiary": "#005474",
+                        "surface-bright": "#f8f9ff",
+                        "surface-container-high": "#dce9ff",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#c4e7ff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#006e95",
+                        "on-primary-fixed-variant": "#0038b6",
+                        "surface-container-low": "#eff4ff",
+                        "on-secondary-container": "#5c647a",
+                        "surface-tint": "#004ced",
+                        "surface-container-highest": "#d3e4fe",
+                        "background": "#f8f9ff",
+                        "primary": "#003ec7",
+                        "on-tertiary-container": "#caeaff",
+                        "surface": "#f8f9ff",
+                        "primary-fixed-dim": "#b7c4ff",
+                        "on-surface": "#0b1c30",
+                        "on-primary-container": "#dfe3ff",
+                        "on-surface-variant": "#434656",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "error": "#ba1a1a",
+                        "on-secondary-fixed": "#131b2e",
+                        "outline-variant": "#c3c5d9",
+                        "secondary-container": "#dae2fd",
+                        "primary-container": "#0052ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "stack-sm": "8px",
+                        "section-gap": "48px",
+                        "margin-page": "32px",
+                        "container-max": "1280px",
+                        "element-gap": "16px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Inter"],
+                        "headline-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "mono-sm": ["JetBrains Mono"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "headline-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "headline-lg": ["30px", {"lineHeight": "36px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "mono-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            backdrop-filter: blur(12px);
+            background-color: rgba(248, 250, 255, 0.7);
+        }
+        .active-nav-shadow {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex">
+<!-- Sidebar Navigation Shell -->
+<aside class="hidden md:flex flex-col h-screen w-64 docked left-0 sticky top-0 bg-surface border-r border-outline-variant py-margin-page px-4 z-50 glass-sidebar">
+<div class="mb-8 px-2">
+<h1 class="text-headline-sm font-headline-sm font-bold text-primary">CardioAI Pro</h1>
+<p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-wider">Clinical Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Navigation Items mapped from JSON logic -->
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg active-nav-shadow translate-x-1 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Patients
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="radiology">radiology</span>
+                X-ray Requests
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="psychology">psychology</span>
+                AI Analysis
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="manage_accounts">manage_accounts</span>
+                User Management
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Reports
+            </a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 text-on-surface-variant font-label-md hover:bg-surface-container-high transition-all rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- Top Navigation Anchor -->
+<header class="h-16 sticky top-0 z-40 bg-surface/70 backdrop-blur-md border-b border-outline-variant flex items-center justify-between px-gutter">
+<div class="flex items-center gap-element-gap">
+<h2 class="font-headline-md text-headline-md font-bold text-primary">Patient Registration</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden lg:flex items-center bg-surface-container-low px-3 py-1.5 rounded-full border border-outline-variant">
+<span class="material-symbols-outlined text-outline text-[20px]" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-sm w-48" placeholder="Global search..." type="text"/>
+</div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-container rounded-full" data-icon="notifications">notifications</button>
+<div class="h-8 w-8 rounded-full bg-primary-fixed overflow-hidden border border-primary/20">
+<img alt="Clinician Profile" class="h-full w-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5D5xbRo8RHRYSD387kiBWC78NXQlF9buyyMTMNuuG1-WYLmX2ANxS2TwhVrvICkeObbMQeD0h9QzixEF0viS2e47sHtVLe7VxY3lcmZ0JzLGGpuyyxkW_WZdKlMuxRDbvMasRZjs0IRql7BrdtBKpGDYcv4rIcAtwIpbZB26i73x9M1VF3QTnhH-M5_JGw16_wfRnDKejgthrpyptrg9QibV9cvFbksxYEHLtUwGBAqWRG0L_WYPhAre8JTDOEmEG5qnm2Ywn9I9A"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="flex-1 p-margin-page overflow-y-auto">
+<div class="max-w-container-max mx-auto">
+<!-- Registration Instruction Header -->
+<div class="mb-section-gap">
+<h3 class="font-headline-lg text-headline-lg text-on-surface mb-2">New Patient Entry</h3>
+<p class="text-body-lg text-secondary font-body-lg max-w-2xl">
+                        Please ensure all clinical identifiers are double-checked against physical ID documentation. Accurate data entry is critical for downstream AI diagnostic precision.
+                    </p>
+</div>
+<!-- Tabbed Interface -->
+<div class="flex items-center gap-8 border-b border-outline-variant mb-gutter">
+<button class="pb-4 text-primary font-bold border-b-2 border-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="person_add">person_add</span>
+                        Register Patient
+                    </button>
+<button class="pb-4 text-secondary hover:text-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="list_alt">list_alt</span>
+                        Patient List
+                    </button>
+<button class="pb-4 text-secondary hover:text-primary transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px]" data-icon="edit_note">edit_note</span>
+                        Edit Requests
+                    </button>
+</div>
+<!-- Registration Form Layout (Bento Grid Style) -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Form Canvas -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-8 shadow-sm">
+<form class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Patient Name -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Full Legal Name</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-body-md" placeholder="e.g. Jonathan Doe" type="text"/>
+</div>
+<!-- Contact Number -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Contact Number</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-body-md" placeholder="+1 (555) 000-0000" type="tel"/>
+<p class="text-label-md text-outline font-label-md">Use international format including country code.</p>
+</div>
+<!-- Age -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Age</label>
+<input class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-body-md" placeholder="25" type="number"/>
+<p class="text-label-md text-error font-label-md opacity-0" id="age-hint">Please enter a valid age between 0-120.</p>
+</div>
+<!-- Gender -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Biological Gender</label>
+<div class="relative">
+<select class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none appearance-none transition-all text-body-md bg-transparent">
+<option disabled="" selected="" value="">Select gender</option>
+<option value="male">Male</option>
+<option value="female">Female</option>
+<option value="other">Other / Non-specified</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-outline" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Medical History -->
+<div class="space-y-2">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Medical History Summary</label>
+<textarea class="w-full px-4 py-3 rounded-lg border border-outline-variant focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-body-md resize-none" placeholder="Note any chronic conditions, allergies, or previous cardiac events..." rows="5"></textarea>
+</div>
+<!-- Action Footer -->
+<div class="pt-4 flex items-center justify-end gap-4">
+<button class="px-6 py-3 rounded-lg font-bold border border-outline-variant text-on-background hover:bg-surface-container transition-colors" type="button">
+                                        Clear Draft
+                                    </button>
+<button class="px-8 py-3 rounded-lg font-bold bg-primary text-white hover:bg-primary-container active:scale-95 transition-all shadow-lg shadow-primary/20 flex items-center gap-2" type="submit">
+<span class="material-symbols-outlined" data-icon="how_to_reg">how_to_reg</span>
+                                        Register Patient
+                                    </button>
+</div>
+</form>
+</div>
+</div>
+<!-- Contextual Side Panel (Bento Sidebar) -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Preview Card -->
+<div class="bg-surface-container-high border border-outline-variant rounded-xl p-6 relative overflow-hidden group">
+<div class="absolute -right-12 -top-12 h-40 w-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors"></div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="verified_user">verified_user</span>
+                                Compliance
+                            </h4>
+<p class="text-body-sm text-on-surface-variant mb-4">
+                                This portal is HIPAA compliant. All registered data is encrypted end-to-end and stored in a secure HITRUST-certified environment.
+                            </p>
+<img alt="Medical Infrastructure" class="w-full h-32 object-cover rounded-lg border border-outline-variant mb-4" data-alt="A clean, clinical, high-tech hospital data center background with soft blue glowing servers and glass partitions. The lighting is sterile yet inviting, with a focus on modern healthcare technology and data security. The visual style is premium corporate SaaS, utilizing glassmorphism and soft shadows to create depth and a professional atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg6tdg13Kw3wP6pSzXofy6qJXR2LQccuU307k4VksXJTkMVpZblAGAAbbBTa1xboSl8gGBSylOvpEnrLonruHoGP8FWZ0Vz9XIdFFA3tw0erv1EUVMfSwCCSaI3958prGz4BGkWBhlM5arbL5kJo6xjfZ3xoGHa_1C5j-pt3GE8SJAz0ctwUy6_6AKNtowbhqKe4ZdQMYWbovHYefOMBBCXEeeilniwwiD8exK4MXfgwt8amnmyrMHNYL_TeK-4yU6EyA1BpWBrlop"/>
+<ul class="space-y-2">
+<li class="flex items-center gap-2 text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="check_circle">check_circle</span>
+                                    Identity Verified
+                                </li>
+<li class="flex items-center gap-2 text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="check_circle">check_circle</span>
+                                    Consent Form Signed
+                                </li>
+</ul>
+</div>
+<!-- Quick Stats -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-6">
+<span class="block text-label-md font-label-md text-on-surface-variant uppercase mb-4">System Status</span>
+<div class="flex items-center justify-between mb-4">
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-primary">124</span>
+<span class="text-label-md text-outline">Registered Today</span>
+</div>
+<div class="h-12 w-12 flex items-center justify-center bg-primary-fixed rounded-full text-primary">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-3/4"></div>
+</div>
+<p class="mt-2 text-label-md text-on-surface-variant">75% of daily target reached.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Sticky Footer -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant">
+<div class="max-w-container-max mx-auto px-gutter py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="text-body-sm text-secondary font-body-sm">
+                    © 2024 CardioAI Systems. Clinical Grade Precision.
+                </p>
+<div class="flex items-center gap-6">
+<a class="text-body-sm text-secondary hover:text-primary underline transition-all" href="#">Privacy Policy</a>
+<a class="text-body-sm text-secondary hover:text-primary underline transition-all" href="#">HIPAA Compliance</a>
+<a class="text-body-sm text-secondary hover:text-primary underline transition-all" href="#">Contact Support</a>
+</div>
+</div>
+</footer>
+</main>
+<script>
+        // Micro-interactions for form feedback
+        const ageInput = document.querySelector('input[type="number"]');
+        const ageHint = document.getElementById('age-hint');
+
+        ageInput?.addEventListener('input', (e) => {
+            const val = parseInt(e.target.value);
+            if (val < 0 || val > 120) {
+                ageHint.style.opacity = '1';
+                e.target.classList.add('border-error');
+            } else {
+                ageHint.style.opacity = '0';
+                e.target.classList.remove('border-error');
+            }
+        });
+
+        // Add active states to navigation buttons
+        const navButtons = document.querySelectorAll('.flex.items-center.gap-8 button');
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                navButtons.forEach(b => {
+                    b.className = 'pb-4 text-secondary hover:text-primary transition-colors flex items-center gap-2';
+                    b.classList.remove('border-b-2', 'border-primary', 'font-bold', 'text-primary');
+                });
+                btn.className = 'pb-4 text-primary font-bold border-b-2 border-primary flex items-center gap-2';
+            });
+        });
+    </script>
+</body></html>

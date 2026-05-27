@@ -1,0 +1,83 @@
+@startuml object_diagram_system_overview
+!theme plain
+title Object Diagram - System Overview Dashboard
+
+object "systemOverview1 : SystemOverview" as systemOverview1 {
+  totalUsers = 8
+  totalRequests = 15
+  totalDiagnoses = 12
+  pendingRequests = 3
+  completedRequests = 12
+  positiveResults = 4
+  negativeResults = 8
+  usersByRole = "[{\"role\":\"admin\",\"count\":1}, {\"role\":\"reception\",\"count\":2}, ...]"
+  requestsByDate = "[{\"date\":\"2025-12-15\",\"count\":5}, ...]"
+  diagnosisByDate = "[{\"date\":\"2025-12-15\",\"positive\":2,\"negative\":3}, ...]"
+  systemPerformance = "{\"avgProcessingTime\":12.5,\"successRate\":95.2,\"uptime\":99.5}"
+}
+
+object "admin3 : Admin" as admin3 {
+  id = 1
+  username = "admin"
+  email = "admin@hospital.com"
+  role = "admin"
+  fullName = "System Administrator"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "userStats : Object" as userStats {
+  adminCount = 1
+  receptionCount = 2
+  generalDoctorCount = 2
+  specialistDoctorCount = 2
+  technicianCount = 1
+  totalActiveUsers = 8
+  bannedUsers = 0
+}
+
+object "diagnosisStats : Object" as diagnosisStats {
+  todayPositive = 2
+  todayNegative = 3
+  weeklyPositive = 8
+  weeklyNegative = 15
+  monthlyPositive = 25
+  monthlyNegative = 42
+  accuracyRate = 94.8
+}
+
+object "performanceMetrics : Object" as performanceMetrics {
+  avgProcessingTime = 12.5
+  successRate = 95.2
+  systemUptime = 99.5
+  peakHourRequests = 8
+  averageDailyRequests = 5.2
+  responseTime = 0.8
+}
+
+' Relationships
+admin3 --> systemOverview1 : "views"
+systemOverview1 --> userStats : "contains"
+systemOverview1 --> diagnosisStats : "contains"
+systemOverview1 --> performanceMetrics : "contains"
+
+note right of systemOverview1
+  Real-time system metrics
+  displayed on admin dashboard
+  with charts and analytics
+end note
+
+note right of diagnosisStats
+  AI prediction statistics
+  showing positive vs negative
+  cardiomegaly detections
+end note
+
+note right of performanceMetrics
+  System performance indicators
+  for monitoring health
+  and efficiency
+end note
+
+@enduml

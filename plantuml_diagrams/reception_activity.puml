@@ -1,0 +1,86 @@
+@startuml reception_activity
+!theme plain
+title Reception Activity Diagram
+
+start
+
+:Login to System;
+
+if (Authentication Successful?) then (yes)
+  :Access Dashboard;
+  
+  :Select Task;
+  
+  switch (Task Type?)
+  case (Register Patient)
+    :Enter Patient Details;
+    :Fill Required Fields (Name, Contact);
+    :Add Optional Info (Age, Gender, Medical History);
+    
+    if (Validate Data?) then (yes)
+      if (Duplicate Phone Number?) then (yes)
+        :Show Duplicate Warning;
+        
+        if (Continue Registration?) then (yes)
+          :Proceed with Registration;
+        else (no)
+          :Cancel Registration;
+          stop
+        endif
+      endif
+      
+      :Generate Patient ID (PAT####);
+      :Save to Database;
+      :Notify General Doctors;
+      :Display Success Message;
+    else (no)
+      :Display Validation Errors;
+      :Return to Form;
+    endif
+    
+  case (Search Patient)
+    :Enter Search Criteria;
+    :Search by Name/ID/Phone;
+    :Query Database;
+    :Display Results;
+    
+    if (Patient Found?) then (yes)
+      :Select Patient;
+      :View Patient Details;
+      
+      if (Request Edit?) then (yes)
+        :Enter Edit Reason;
+        :Submit Edit Request;
+        :Display Request Submitted;
+      endif
+    else (no)
+      :Display "No Results Found";
+    endif
+    
+  case (Manage Edit Requests)
+    :View My Edit Requests;
+    :Display Request Status;
+    
+    if (Request Approved for Edit?) then (yes)
+      :Open Edit Form;
+      :Modify Patient Data;
+      :Submit Changes;
+      :Update Request Status;
+      :Display "Changes Submitted for Final Approval";
+    else (no)
+      if (Request Pending?) then (yes)
+        :Display "Waiting for Admin Approval";
+      else
+        :Display Request Status;
+      endif
+    endif
+    
+  endswitch
+  
+else (no)
+  :Display Error Message;
+endif
+
+stop
+
+@enduml

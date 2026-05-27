@@ -1,0 +1,80 @@
+@startuml system_state
+!theme plain
+title System State Chart Diagram
+
+[*] --> Initializing
+
+Initializing --> Starting : loadConfiguration()\n[Load system configuration]
+
+Starting --> DatabaseConnecting : connectDatabase()\n[Establish database connection]
+
+DatabaseConnecting --> AIModelLoading : databaseConnected()\n[Database connection successful]
+DatabaseConnecting --> DatabaseError : connectionFailed()\n[Database connection failed]
+
+AIModelLoading --> Running : modelsLoaded()\n[AI models loaded successfully]
+AIModelLoading --> ModelError : modelLoadFailed()\n[AI model loading failed]
+
+Running --> MaintenanceMode : enterMaintenance()\n[Admin triggers maintenance]
+Running --> Overloaded : systemOverload()\n[System resources exceeded]
+Running --> DatabaseError : databaseDisconnected()\n[Database connection lost]
+
+MaintenanceMode --> Running : exitMaintenance()\n[Maintenance complete]
+
+Overloaded --> Running : loadReduced()\n[System load normalized]
+Overloaded --> Emergency : criticalOverload()\n[Critical system overload]
+
+DatabaseError --> DatabaseConnecting : reconnectDatabase()\n[Attempt database reconnection]
+DatabaseError --> Emergency : criticalDatabaseError()\n[Critical database failure]
+
+ModelError --> AIModelLoading : reloadModels()\n[Retry model loading]
+ModelError --> Emergency : criticalModelError()\n[Critical AI model failure]
+
+Emergency --> Shutdown : emergencyShutdown()\n[Emergency system shutdown]
+
+Running --> Shutdown : normalShutdown()\n[Normal system shutdown]
+MaintenanceMode --> Shutdown : shutdownFromMaintenance()\n[Shutdown during maintenance]
+
+Shutdown --> [*] : systemStopped()\n[System completely stopped]
+
+' Self-transitions
+Running --> Running : processRequest()\n[Handle user requests]
+Running --> Running : performBackup()\n[Automated backup]
+MaintenanceMode --> MaintenanceMode : updateSystem()\n[Apply system updates]
+
+' Notes
+note right of Initializing
+  System starting up
+  Loading core components
+end note
+
+note right of Running
+  Normal operation
+  All services available
+end note
+
+note right of MaintenanceMode
+  Planned maintenance
+  Limited functionality
+end note
+
+note right of Overloaded
+  High system load
+  Performance degraded
+end note
+
+note right of Emergency
+  Critical system state
+  Immediate action required
+end note
+
+note right of DatabaseError
+  Database issues
+  Data operations affected
+end note
+
+note right of ModelError
+  AI model problems
+  Predictions unavailable
+end note
+
+@enduml

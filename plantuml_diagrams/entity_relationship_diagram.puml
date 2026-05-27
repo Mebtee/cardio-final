@@ -1,0 +1,234 @@
+@startuml entity_relationship_diagram
+!theme plain
+title Cardiomegaly Detection System - Entity Relationship Diagram
+
+' Define entities with attributes
+entity "users" {
+  * id : INT <<PK>>
+  --
+  * username : VARCHAR(50) <<UK>>
+  * password : VARCHAR(255)
+  * email : VARCHAR(100) <<UK>>
+  * role : ENUM('admin', 'doctor', 'xray_technician', 'reception', 'general_doctor')
+  full_name : VARCHAR(100)
+  specialty : VARCHAR(100)
+  is_banned : BOOLEAN
+  created_at : TIMESTAMP
+}
+
+entity "patients" {
+  * id : INT <<PK>>
+  --
+  * patient_name : VARCHAR(100)
+  patient_id : VARCHAR(50)
+  contact_number : VARCHAR(20)
+  age : INT
+  gender : ENUM('male', 'female', 'other')
+  medical_history : TEXT
+  * registered_by : INT <<FK>>
+  status : ENUM('registered', 'referred', 'completed')
+  referred_to : INT <<FK>>
+  created_at : TIMESTAMP
+}
+
+entity "xray_requests" {
+  * id : VARCHAR(36) <<PK>>
+  --
+  * doctor_id : INT <<FK>>
+  * patient_name : VARCHAR(100)
+  patient_id : VARCHAR(50)
+  request_notes : TEXT
+  status : ENUM('pending', 'completed', 'in_progress')
+  created_at : TIMESTAMP
+}
+
+entity "predictions" {
+  * id : VARCHAR(36) <<PK>>
+  --
+  * request_id : VARCHAR(36) <<FK>>
+  * filename : VARCHAR(255)
+  * prediction : VARCHAR(50)
+  * confidence : FLOAT
+  * timestamp : DATETIME
+}
+
+entity "password_reset_tokens" {
+  * id : INT <<PK>>
+  --
+  * user_id : INT <<FK>>
+  * token : VARCHAR(255)
+  * expires_at : DATETIME
+  used : TINYINT(1)
+  created_at : TIMESTAMP
+}
+
+entity "patient_edit_requests" {
+  * id : INT <<PK>>
+  --
+  * patient_id : INT <<FK>>
+  * requested_by : INT <<FK>>
+  request_reason : TEXT
+  status : ENUM('pending_approval', 'approved_for_edit', 'changes_submitted', 'approved_final', 'rejected')
+  original_data : JSON
+  proposed_changes : JSON
+  reviewed_by : INT <<FK>>
+  review_notes : TEXT
+  created_at : TIMESTAMP
+  approved_at : TIMESTAMP
+  submitted_at : TIMESTAMP
+  final_approved_at : TIMESTAMP
+}
+
+entity "notifications" {
+  * id : INT <<PK>>
+  --
+  * user_id : INT <<FK>>
+  * type : VARCHAR(50)
+  * title : VARCHAR(255)
+  * message : TEXT
+  related_id : VARCHAR(50)
+  is_read : BOOLEAN
+  created_at : TIMESTAMP
+}
+
+' Define relationships
+users ||--o{ patients : "registers\n(registered_by)"
+users ||--o{ patients : "refers to\n(referred_to)"
+users ||--o{ xray_requests : "creates\n(doctor_id)"
+users ||--o{ password_reset_tokens : "requests\n(user_id)"
+users ||--o{ patient_edit_requests : "requests\n(requested_by)"
+users ||--o{ patient_edit_requests : "reviews\n(reviewed_by)"
+users ||--o{ notifications : "receives\n(user_id)"
+
+patients ||--o{ patient_edit_requests : "subject of\n(patient_id)"
+
+xray_requests ||--|| predictions : "generates\n(request_id)"
+
+' Relationship labels and cardinalities
+note right of users
+  **Primary Entity**
+  - Stores all system users
+  - Role-based access control
+  - Authentication credentials
+  - User profile information
+end note
+
+note right of patients
+  **Core Entity**
+  - Patient demographic data
+  - Medical history
+  - Registration tracking
+  - Referral workflow
+end note
+
+note right of xray_requests
+  **Process Entity**
+  - X-ray examination orders
+  - Doctor-initiated requests
+  - Status tracking
+  - Request metadata
+end note
+
+note right of predictions
+  **Result Entity**
+  - AI analysis results
+  - Cardiomegaly predictions
+  - Confidence scores
+  - Processed image data
+end note
+
+note right of patient_edit_requests
+  **Workflow Entity**
+  - Patient data modification requests
+  - Approval workflow tracking
+  - Change history preservation
+  - Multi-step approval process
+end note
+
+note right of notifications
+  **Communication Entity**
+  - System notifications
+  - User alerts
+  - Event-driven messages
+  - Read status tracking
+end note
+
+' Relationship Details
+note on link between users and patients
+  **Registration Relationship**
+  - One user (reception) can register many patients
+  - Each patient must be registered by one user
+  - Cascade delete: if user deleted, patients remain
+end note
+
+note on link between users and xray_requests
+  **Request Creation**
+  - One doctor can create many X-ray requests
+  - Each request must be created by one doctor
+  - Cascade delete: if doctor deleted, requests deleted
+end note
+
+note on link between xray_requests and predictions
+  **Analysis Relationship**
+  - One X-ray request generates one prediction
+  - Each prediction belongs to one request
+  - Cascade delete: if request deleted, prediction deleted
+end note
+
+' Indexes and Constraints
+note bottom of users
+  **Indexes:**
+  - PRIMARY KEY (id)
+  - UNIQUE KEY (username)
+  - UNIQUE KEY (email)
+  - INDEX (role)
+  - INDEX (is_banned)
+end note
+
+note bottom of patients
+  **Indexes:**
+  - PRIMARY KEY (id)
+  - INDEX (patient_id)
+  - INDEX (status)
+  - INDEX (registered_by)
+  - INDEX (referred_to)
+  - INDEX (created_at)
+end note
+
+note bottom of xray_requests
+  **Indexes:**
+  - PRIMARY KEY (id)
+  - INDEX (doctor_id)
+  - INDEX (status)
+  - INDEX (created_at)
+  - INDEX (patient_id)
+end note
+
+note bottom of predictions
+  **Indexes:**
+  - PRIMARY KEY (id)
+  - UNIQUE KEY (request_id)
+  - INDEX (prediction)
+  - INDEX (timestamp)
+  - INDEX (confidence)
+end note
+
+' Data Types and Constraints Legend
+legend right
+  **Legend:**
+  * = NOT NULL
+  PK = Primary Key
+  FK = Foreign Key
+  UK = Unique Key
+  
+  **Relationship Types:**
+  ||--|| = One-to-One
+  ||--o{ = One-to-Many
+  }o--o{ = Many-to-Many
+  
+  **Cascade Rules:**
+  ON DELETE CASCADE = Delete related records
+  ON DELETE SET NULL = Set FK to NULL
+end legend
+
+@enduml

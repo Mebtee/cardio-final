@@ -1,0 +1,106 @@
+@startuml object_diagram_xray_workflow
+!theme plain
+title Object Diagram - X-ray Request and Analysis Workflow
+
+object "patient2 : Patient" as patient2 {
+  id = 2
+  patientName = "Jane Smith"
+  patientId = "PAT0002"
+  contactNumber = "0917654321"
+  age = 52
+  gender = "female"
+  medicalHistory = "Chest pain, shortness of breath"
+  registeredBy = 3
+  status = "referred"
+  referredTo = 4
+  createdAt = "2025-12-15 08:00:00"
+}
+
+object "specialistDoctor1 : SpecialistDoctor" as specialistDoctor1 {
+  id = 4
+  username = "cardiologist1"
+  email = "cardio@hospital.com"
+  role = "doctor"
+  fullName = "Dr. Emily Johnson"
+  specialty = "Cardiology"
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "xrayRequest1 : XRayRequest" as xrayRequest1 {
+  id = "req-abc123"
+  doctorId = 4
+  patientName = "Jane Smith"
+  patientId = "PAT0002"
+  requestNotes = "Suspected cardiomegaly, chest pain"
+  status = "completed"
+  createdAt = "2025-12-15 10:00:00"
+}
+
+object "technician1 : XRayTechnician" as technician1 {
+  id = 5
+  username = "xraytech1"
+  email = "tech@hospital.com"
+  role = "xray_technician"
+  fullName = "Mark Wilson"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "prediction1 : Prediction" as prediction1 {
+  id = "pred-xyz789"
+  requestId = "req-abc123"
+  filename = "chest_xray_jane.jpg"
+  prediction = "positive"
+  confidence = 0.87
+  timestamp = "2025-12-15 10:45:00"
+}
+
+object "notification2 : Notification" as notification2 {
+  id = 2
+  userId = 5
+  type = "xray_request"
+  title = "New X-ray Request"
+  message = "New X-ray request for Jane Smith (PAT0002)"
+  isRead = true
+  createdAt = "2025-12-15 10:00:05"
+}
+
+object "notification3 : Notification" as notification3 {
+  id = 3
+  userId = 4
+  type = "xray_result_ready"
+  title = "X-ray Result Ready"
+  message = "Result for Jane Smith: Positive (87% confidence)"
+  isRead = false
+  createdAt = "2025-12-15 10:45:05"
+}
+
+' Relationships
+patient2 --> specialistDoctor1 : "referredTo"
+specialistDoctor1 --> xrayRequest1 : "created"
+xrayRequest1 --> prediction1 : "generates"
+technician1 --> prediction1 : "processed"
+notification2 --> technician1 : "notifies"
+notification3 --> specialistDoctor1 : "notifies"
+
+note right of patient2
+  Patient referred to
+  cardiologist for
+  specialist consultation
+end note
+
+note right of prediction1
+  AI detected positive
+  cardiomegaly with
+  87% confidence
+end note
+
+note right of notification3
+  Doctor notified that
+  X-ray results are
+  ready for review
+end note
+
+@enduml

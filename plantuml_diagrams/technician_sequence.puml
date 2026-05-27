@@ -1,0 +1,72 @@
+@startuml technician_sequence
+!theme plain
+title X-ray Technician Sequence Diagram - Image Processing & AI Analysis
+
+actor "X-ray Technician" as tech
+participant "System" as sys
+participant "Database" as db
+participant "File System" as fs
+participant "AI Model" as ai
+participant "Notification" as notif
+
+== Login ==
+tech -> sys: Login
+sys -> db: Validate Credentials
+db -> sys: Return User Data
+sys -> tech: Display Dashboard
+
+== View Pending Requests ==
+tech -> sys: View Pending Requests
+sys -> db: Query X-ray Requests (status='pending')
+db -> sys: Return Request List
+sys -> tech: Display Request Queue
+
+== View Request Statistics ==
+tech -> sys: View Statistics
+sys -> db: Query Request Counts
+db -> sys: Return Statistics (pending, completed, total)
+sys -> tech: Display Statistics Dashboard
+
+== Process X-ray Request ==
+tech -> sys: Select Request
+sys -> db: Query Request Details
+db -> sys: Return Patient & Request Data
+sys -> tech: Display Request Information
+
+tech -> sys: Upload X-ray Image
+tech -> sys: Select Image File (JPEG/PNG only)
+sys -> sys: Validate File Type
+sys -> fs: Store Image File
+fs -> sys: Return File Path
+
+sys -> ai: Process Image for Cardiomegaly Detection
+ai -> ai: Analyze Chest X-ray
+ai -> sys: Return Prediction Result
+
+alt Valid X-ray Image
+  ai -> sys: Return (prediction: "positive"/"negative", confidence: float)
+  sys -> db: Store Prediction Result
+  sys -> db: Update Request Status to 'completed'
+  db -> sys: Confirm Storage
+  sys -> notif: Notify Requesting Doctor
+  sys -> tech: Upload & Analysis Successful
+else Invalid Image
+  ai -> sys: Return "not_xray" error
+  sys -> fs: Delete Invalid Image
+  sys -> tech: Error - Not a valid chest X-ray
+else Processing Error
+  ai -> sys: Return "error" with details
+  sys -> fs: Delete Failed Image
+  sys -> tech: Processing Failed - Try Again
+end
+
+== View Completed Requests ==
+tech -> sys: View Completed Requests
+sys -> db: Query Completed Requests
+db -> sys: Return Completed List
+sys -> tech: Display Completed Requests with Results
+
+== Receive Notifications ==
+notif -> tech: New X-ray Request Available
+
+@enduml

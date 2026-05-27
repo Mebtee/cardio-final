@@ -1,0 +1,91 @@
+@startuml specialist_doctor_activity
+!theme plain
+title Specialist Doctor Activity Diagram
+
+start
+
+:Login to System;
+
+if (Authentication Successful?) then (yes)
+  :Access Dashboard;
+  :View Dashboard Tabs;
+  
+  switch (Selected Tab?)
+  case (Referred Patients)
+    :Load Referred Patients;
+    
+    if (Patients Available?) then (yes)
+      :Select Patient;
+      :Review Patient Information;
+      
+      if (Need X-ray?) then (yes)
+        :Create X-ray Request;
+        :Enter Request Details;
+        :Submit Request;
+        :Update Patient Status;
+        :Notify X-ray Technicians;
+        :Display Success Message;
+      endif
+    else (no)
+      :Display "No Referred Patients";
+    endif
+    
+  case (X-ray Requests)
+    :View Request History;
+    :Display Request Summary Statistics;
+    
+    if (Filter Requests?) then (yes)
+      :Apply Date/Status Filters;
+      :Update Display;
+    endif
+    
+    :Review Request List;
+    
+    if (Select Request?) then (yes)
+      :View Request Details;
+      
+      if (Results Available?) then (yes)
+        :Display AI Prediction;
+        :Show Confidence Score;
+        :Review Analysis Details;
+        
+        if (Request Another X-ray?) then (yes)
+          :Create New Request;
+          :Enter Additional Notes;
+          :Submit Request;
+        endif
+      else (no)
+        :Display "Results Pending";
+      endif
+    endif
+    
+  endswitch
+  
+  if (Check Notifications?) then (yes)
+    :View Notification Bell;
+    
+    switch (Notification Type?)
+    case (Patient Referral)
+      :Read Referral Details;
+      :Navigate to Referred Patients;
+    case (X-ray Result Ready)
+      :Read Result Summary;
+      :Navigate to Request Details;
+    endswitch
+    
+    :Mark Notifications as Read;
+  endif
+  
+  if (Refresh Data?) then (yes)
+    :Reload Patient List;
+    :Update Request History;
+    :Refresh Statistics;
+  endif
+  
+else (no)
+  :Display Authentication Error;
+endif
+
+stop
+
+@enduml

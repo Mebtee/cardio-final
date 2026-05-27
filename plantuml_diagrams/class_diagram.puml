@@ -1,0 +1,204 @@
+@startuml class_diagram
+!theme plain
+title Cardiomegaly Detection System - Class Diagram
+
+' User hierarchy
+abstract class User {
+  - id: int
+  - username: string
+  - password: string
+  - email: string
+  - role: enum
+  - fullName: string
+  - specialty: string
+  - isBanned: boolean
+  - createdAt: datetime
+  --
+  + login(): boolean
+  + validateSession(): boolean
+  + changePassword(): boolean
+  + updateProfile(): boolean
+}
+
+class Admin {
+  + manageUsers(): void
+  + viewSystemOverview(): SystemOverview
+  + banUser(userId: int): boolean
+  + downloadImages(filters: object): File[]
+  + approveEditRequest(requestId: int): boolean
+  + rejectEditRequest(requestId: int): boolean
+}
+
+class Reception {
+  + registerPatient(data: object): Patient
+  + searchPatients(query: string): Patient[]
+  + requestPatientEdit(patientId: int, reason: string): EditRequest
+  + submitPatientChanges(requestId: int, changes: object): boolean
+  + viewEditRequestStatus(): EditRequest[]
+}
+
+class GeneralDoctor {
+  + viewRegisteredPatients(filters: object): Patient[]
+  + referToSpecialist(patientId: int, specialistId: int): boolean
+  + filterPatients(criteria: object): Patient[]
+  + receiveNotifications(): Notification[]
+}
+
+class SpecialistDoctor {
+  + viewReferredPatients(): Patient[]
+  + createXRayRequest(patientId: int, notes: string): XRayRequest
+  + reviewXRayResults(requestId: string): Prediction
+  + viewRequestHistory(): XRayRequest[]
+  + receiveNotifications(): Notification[]
+}
+
+class XRayTechnician {
+  + viewPendingRequests(): XRayRequest[]
+  + uploadXRayImage(requestId: string, image: File): Prediction
+  + processAIAnalysis(image: File): Prediction
+  + viewStatistics(): object
+  + receiveNotifications(): Notification[]
+}
+
+' Core entities
+class Patient {
+  - id: int
+  - patientName: string
+  - patientId: string
+  - contactNumber: string
+  - age: int
+  - gender: enum
+  - medicalHistory: string
+  - registeredBy: int
+  - status: enum
+  - referredTo: int
+  - createdAt: datetime
+  --
+  + register(data: object): Patient
+  + search(query: string): Patient[]
+  + refer(specialistId: int): boolean
+  + updateStatus(status: string): boolean
+}
+
+class XRayRequest {
+  - id: string
+  - doctorId: int
+  - patientName: string
+  - patientId: string
+  - requestNotes: string
+  - status: enum
+  - createdAt: datetime
+  --
+  + create(doctorId: int, patientData: object): XRayRequest
+  + updateStatus(status: string): boolean
+  + getByDoctor(doctorId: int): XRayRequest[]
+  + getPending(): XRayRequest[]
+}
+
+class Prediction {
+  - id: string
+  - requestId: string
+  - filename: string
+  - prediction: string
+  - confidence: float
+  - timestamp: datetime
+  --
+  + analyzeImage(imagePath: string): Prediction
+  + getResult(): object
+  + storeResult(): boolean
+}
+
+class PatientEditRequest {
+  - id: int
+  - patientId: int
+  - requestedBy: int
+  - requestReason: string
+  - status: enum
+  - originalData: json
+  - proposedChanges: json
+  - reviewedBy: int
+  - createdAt: datetime
+  - approvedAt: datetime
+  - submittedAt: datetime
+  - finalApprovedAt: datetime
+  --
+  + create(patientId: int, reason: string): EditRequest
+  + approve(adminId: int): boolean
+  + reject(adminId: int, notes: string): boolean
+  + submitChanges(changes: object): boolean
+}
+
+class Notification {
+  - id: int
+  - userId: int
+  - type: string
+  - title: string
+  - message: string
+  - isRead: boolean
+  - createdAt: datetime
+  --
+  + send(userId: int, message: object): boolean
+  + markRead(notificationId: int): boolean
+  + getUnreadCount(userId: int): int
+  + getByUser(userId: int): Notification[]
+}
+
+class SystemOverview {
+  - totalUsers: int
+  - totalRequests: int
+  - totalDiagnoses: int
+  - pendingRequests: int
+  - completedRequests: int
+  - positiveResults: int
+  - negativeResults: int
+  - usersByRole: object[]
+  - requestsByDate: object[]
+  - diagnosisByDate: object[]
+  - systemPerformance: object
+  --
+  + generateOverview(): SystemOverview
+  + getMetrics(): object
+}
+
+' Relationships
+User <|-- Admin
+User <|-- Reception
+User <|-- GeneralDoctor
+User <|-- SpecialistDoctor
+User <|-- XRayTechnician
+
+Patient ||--o{ XRayRequest : "has requests"
+XRayRequest ||--o| Prediction : "generates"
+Patient ||--o{ PatientEditRequest : "can be edited"
+User ||--o{ Notification : "receives"
+User ||--o{ PatientEditRequest : "creates/reviews"
+
+Reception --> Patient : "registers"
+GeneralDoctor --> Patient : "refers"
+SpecialistDoctor --> XRayRequest : "creates"
+XRayTechnician --> Prediction : "processes"
+Admin --> PatientEditRequest : "approves/rejects"
+Admin --> SystemOverview : "views"
+
+' Notes
+note right of Patient
+  Core entity representing
+  patients in the system
+end note
+
+note right of XRayRequest
+  Represents X-ray examination
+  requests from doctors
+end note
+
+note right of Prediction
+  AI-generated cardiomegaly
+  detection results
+end note
+
+note right of PatientEditRequest
+  Workflow for patient data
+  modification approval
+end note
+
+@enduml

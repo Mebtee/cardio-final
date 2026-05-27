@@ -1,0 +1,47 @@
+@startuml general_doctor_sequence
+!theme plain
+title General Doctor Sequence Diagram - Patient Triage & Referral
+
+actor "General Doctor" as gd
+participant "System" as sys
+participant "Database" as db
+participant "Notification" as notif
+
+== Login ==
+gd -> sys: Login
+sys -> db: Validate Credentials
+db -> sys: Return User Data
+sys -> gd: Display Dashboard
+
+== View Registered Patients ==
+gd -> sys: View Registered Patients
+sys -> db: Query Patients (status='registered')
+db -> sys: Return Patient List
+sys -> gd: Display Patients
+
+== Filter Patients ==
+gd -> sys: Apply Filters
+gd -> sys: Set Date/Status Filters
+sys -> db: Query with Filters
+db -> sys: Return Filtered Results
+sys -> gd: Display Filtered Patients
+
+== Refer Patient to Specialist ==
+gd -> sys: Select Patient for Referral
+sys -> db: Query Available Specialists
+db -> sys: Return Specialist List
+sys -> gd: Display Specialist Selection Dialog
+
+gd -> sys: Select Specialist Doctor
+gd -> sys: Confirm Referral
+sys -> db: Update Patient Status to 'referred'
+sys -> db: Set referred_to field
+db -> sys: Confirm Referral
+sys -> notif: Notify Specialist Doctor
+sys -> gd: Referral Success Message
+
+== Receive Notifications ==
+notif -> gd: New Patient Registered
+notif -> gd: Patient Status Updated
+
+@enduml

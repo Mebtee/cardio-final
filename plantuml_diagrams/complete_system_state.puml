@@ -1,0 +1,92 @@
+@startuml complete_system_state
+!theme plain
+title Complete System State Chart - Cardiomegaly Detection System
+
+state "System Initialization" as Init {
+  [*] --> LoadingConfig
+  LoadingConfig --> ConnectingDB : config loaded
+  ConnectingDB --> LoadingAI : DB connected
+  LoadingAI --> SystemReady : AI models loaded
+}
+
+state "Patient Management" as PatientMgmt {
+  [*] --> PatientRegistration
+  PatientRegistration --> PatientTriage : patient registered
+  PatientTriage --> SpecialistReferral : general doctor refers
+  SpecialistReferral --> XRayOrdering : specialist reviews
+}
+
+state "X-Ray Processing" as XRayProc {
+  [*] --> RequestCreated
+  RequestCreated --> ImageUpload : technician processes
+  ImageUpload --> AIAnalysis : image uploaded
+  AIAnalysis --> ResultGeneration : analysis complete
+  ResultGeneration --> ResultReview : results stored
+}
+
+state "Administrative Tasks" as AdminTasks {
+  [*] --> UserManagement
+  UserManagement --> SystemMonitoring : users managed
+  SystemMonitoring --> EditRequestReview : monitoring active
+  EditRequestReview --> DataManagement : requests processed
+}
+
+state "Error Handling" as ErrorHandling {
+  [*] --> ErrorDetected
+  ErrorDetected --> ErrorLogging : log error
+  ErrorLogging --> ErrorResolution : attempt fix
+  ErrorResolution --> SystemRecovery : error resolved
+  ErrorResolution --> CriticalFailure : cannot resolve
+}
+
+' Main system flow
+Init --> PatientMgmt : system ready
+PatientMgmt --> XRayProc : x-ray requested
+XRayProc --> PatientMgmt : results available
+
+' Administrative oversight
+Init --> AdminTasks : admin access
+AdminTasks --> PatientMgmt : patient edits approved
+AdminTasks --> XRayProc : system monitoring
+
+' Error handling integration
+PatientMgmt --> ErrorHandling : error occurred
+XRayProc --> ErrorHandling : processing error
+AdminTasks --> ErrorHandling : admin error
+ErrorHandling --> PatientMgmt : error resolved
+ErrorHandling --> XRayProc : error resolved
+ErrorHandling --> AdminTasks : error resolved
+
+' System shutdown
+PatientMgmt --> [*] : system shutdown
+XRayProc --> [*] : system shutdown
+AdminTasks --> [*] : system shutdown
+ErrorHandling --> [*] : critical failure
+
+' Notes
+note right of Init
+  System startup and
+  component initialization
+end note
+
+note right of PatientMgmt
+  Core patient workflow
+  from registration to referral
+end note
+
+note right of XRayProc
+  X-ray request processing
+  and AI analysis
+end note
+
+note right of AdminTasks
+  Administrative functions
+  and system oversight
+end note
+
+note right of ErrorHandling
+  Error detection and
+  recovery mechanisms
+end note
+
+@enduml

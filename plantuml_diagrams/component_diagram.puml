@@ -1,0 +1,215 @@
+@startuml component_diagram
+!theme plain
+title Cardiomegaly Detection System - Component Diagram
+
+!define RECTANGLE class
+
+' External Systems
+cloud "Internet" as internet
+database "MySQL Database" as mysql_db
+folder "File System" as file_system
+node "Email Server" as email_server
+
+' Frontend Layer
+package "Frontend Layer" {
+  component [React Application] as react_app
+  component [Authentication Service] as auth_service
+  component [API Client] as api_client
+  component [UI Components] as ui_components
+  component [State Management] as state_mgmt
+  
+  package "Dashboard Components" {
+    component [Admin Dashboard] as admin_dash
+    component [Reception Dashboard] as reception_dash
+    component [General Doctor Dashboard] as gd_dash
+    component [Specialist Doctor Dashboard] as sd_dash
+    component [Technician Dashboard] as tech_dash
+  }
+  
+  package "Shared Components" {
+    component [Image Uploader] as image_uploader
+    component [Notification Bell] as notification_bell
+    component [Layout Components] as layout_comp
+    component [Form Components] as form_comp
+  }
+}
+
+' Backend Layer
+package "Backend Layer" {
+  component [Flask Application] as flask_app
+  component [Authentication Module] as auth_module
+  component [Session Management] as session_mgmt
+  component [Middleware] as middleware
+  
+  package "Route Handlers" {
+    component [Auth Routes] as auth_routes
+    component [Admin Routes] as admin_routes
+    component [Patient Routes] as patient_routes
+    component [Request Routes] as request_routes
+    component [Edit Routes] as edit_routes
+    component [Notification Routes] as notif_routes
+  }
+  
+  package "Business Logic" {
+    component [User Management] as user_mgmt
+    component [Patient Management] as patient_mgmt
+    component [X-ray Request Management] as xray_mgmt
+    component [Edit Request Management] as edit_mgmt
+    component [Notification Service] as notif_service
+  }
+}
+
+' AI/ML Layer
+package "AI/ML Layer" {
+  component [AI Model Service] as ai_service
+  component [Cardiomegaly Model] as cardio_model
+  component [X-ray Filter Model] as filter_model
+  component [Image Preprocessing] as img_preprocess
+  component [Prediction Engine] as prediction_engine
+}
+
+' Data Layer
+package "Data Layer" {
+  component [Database Connection] as db_conn
+  component [Data Access Layer] as data_access
+  component [File Storage Manager] as file_mgmt
+  component [Configuration Manager] as config_mgmt
+}
+
+' Security Layer
+package "Security Layer" {
+  component [Password Hashing] as pwd_hash
+  component [Session Validation] as session_valid
+  component [Role-based Access Control] as rbac
+  component [Input Validation] as input_valid
+}
+
+' External Integrations
+package "External Integrations" {
+  component [SMTP Client] as smtp_client
+  component [Email Templates] as email_templates
+}
+
+' Frontend Internal Connections
+react_app --> auth_service
+react_app --> api_client
+react_app --> ui_components
+react_app --> state_mgmt
+
+ui_components --> admin_dash
+ui_components --> reception_dash
+ui_components --> gd_dash
+ui_components --> sd_dash
+ui_components --> tech_dash
+
+ui_components --> image_uploader
+ui_components --> notification_bell
+ui_components --> layout_comp
+ui_components --> form_comp
+
+' Frontend to Backend
+api_client --> flask_app : "HTTP/REST API"
+auth_service --> auth_module : "Authentication"
+
+' Backend Internal Connections
+flask_app --> middleware
+flask_app --> auth_routes
+flask_app --> admin_routes
+flask_app --> patient_routes
+flask_app --> request_routes
+flask_app --> edit_routes
+flask_app --> notif_routes
+
+middleware --> session_mgmt
+middleware --> rbac
+
+auth_routes --> auth_module
+admin_routes --> user_mgmt
+patient_routes --> patient_mgmt
+request_routes --> xray_mgmt
+edit_routes --> edit_mgmt
+notif_routes --> notif_service
+
+' Business Logic to Data Layer
+user_mgmt --> data_access
+patient_mgmt --> data_access
+xray_mgmt --> data_access
+edit_mgmt --> data_access
+notif_service --> data_access
+
+' Business Logic to AI Layer
+xray_mgmt --> ai_service
+ai_service --> cardio_model
+ai_service --> filter_model
+ai_service --> img_preprocess
+ai_service --> prediction_engine
+
+' Data Layer Connections
+data_access --> db_conn
+data_access --> file_mgmt
+flask_app --> config_mgmt
+
+db_conn --> mysql_db
+file_mgmt --> file_system
+
+' Security Layer Connections
+auth_module --> pwd_hash
+auth_module --> session_valid
+middleware --> session_valid
+middleware --> input_valid
+flask_app --> rbac
+
+' External Integrations
+auth_module --> smtp_client
+smtp_client --> email_templates
+smtp_client --> email_server
+
+' External Access
+internet --> react_app : "HTTPS"
+react_app --> internet : "User Interface"
+
+' Notes
+note right of react_app
+  Single Page Application (SPA)
+  Built with React + TypeScript
+  Responsive medical UI design
+end note
+
+note right of flask_app
+  RESTful API Server
+  Role-based authentication
+  JSON data exchange
+end note
+
+note right of ai_service
+  PyTorch-based AI models
+  Cardiomegaly detection
+  Image validation & filtering
+end note
+
+note right of mysql_db
+  Relational database
+  Patient records, users,
+  X-ray requests, predictions
+end note
+
+note right of file_system
+  X-ray image storage
+  Uploaded files management
+  Prediction result files
+end note
+
+' Component Interfaces
+interface "REST API" as rest_api
+interface "Database API" as db_api
+interface "File API" as file_api
+interface "AI API" as ai_api
+interface "Email API" as email_api
+
+flask_app - rest_api
+data_access - db_api
+file_mgmt - file_api
+ai_service - ai_api
+smtp_client - email_api
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml xray_request_state
+!theme plain
+title X-ray Request State Chart Diagram
+
+[*] --> Created
+
+Created --> Pending : submit()\n[Specialist Doctor submits request]
+
+Pending --> InProgress : startProcessing()\n[Technician begins processing]
+
+InProgress --> ImageUploaded : uploadImage()\n[Technician uploads X-ray image]
+
+ImageUploaded --> ProcessingAnalysis : analyze()\n[AI model processes image]
+
+ProcessingAnalysis --> AnalysisComplete : analysisComplete()\n[AI returns prediction]
+
+AnalysisComplete --> Completed : storeResults()\n[Results saved to database]
+
+' Error transitions
+ImageUploaded --> InProgress : invalidImage()\n[Image rejected - not X-ray]
+ProcessingAnalysis --> InProgress : processingError()\n[AI processing failed]
+
+' Self-transitions
+Pending --> Pending : updatePriority()\n[Request priority changed]
+InProgress --> InProgress : retakeImage()\n[Image quality issues]
+
+' Notes
+note right of Created
+  Request initialized
+  with patient and doctor info
+end note
+
+note right of Pending
+  Waiting for technician
+  to process request
+end note
+
+note right of InProgress
+  Technician actively
+  working on request
+end note
+
+note right of ImageUploaded
+  Valid X-ray image
+  uploaded to system
+end note
+
+note right of ProcessingAnalysis
+  AI model analyzing
+  for cardiomegaly
+end note
+
+note right of AnalysisComplete
+  Prediction and confidence
+  score generated
+end note
+
+note right of Completed
+  Results available
+  for doctor review
+end note
+
+@enduml

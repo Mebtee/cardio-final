@@ -1,0 +1,98 @@
+@startuml use_case_diagram
+!theme plain
+title Cardiomegaly Detection System - Use Case Diagram
+
+left to right direction
+
+actor Admin as admin
+actor Reception as reception
+actor "General Doctor" as gd
+actor "Specialist Doctor" as sd
+actor "X-ray Technician" as tech
+
+rectangle "Cardiomegaly Detection System" {
+  
+  package "Admin Functions" {
+    usecase "Manage Users" as UC1
+    usecase "View System Overview" as UC2
+    usecase "Monitor Diagnosis Data" as UC3
+    usecase "Review Edit Requests" as UC4
+    usecase "Download Images" as UC5
+    usecase "Ban/Unban Users" as UC6
+  }
+  
+  package "Reception Functions" {
+    usecase "Register Patients" as UC7
+    usecase "Search Patients" as UC8
+    usecase "Request Patient Edits" as UC9
+    usecase "Submit Patient Changes" as UC10
+    usecase "View Edit Status" as UC11
+  }
+  
+  package "General Doctor Functions" {
+    usecase "View Registered Patients" as UC12
+    usecase "Refer to Specialists" as UC13
+    usecase "Filter Patients" as UC14
+    usecase "Receive Notifications" as UC15
+  }
+  
+  package "Specialist Doctor Functions" {
+    usecase "View Referred Patients" as UC16
+    usecase "Create X-ray Requests" as UC17
+    usecase "Review X-ray Results" as UC18
+    usecase "View Request History" as UC19
+    usecase "Receive Notifications" as UC20
+  }
+  
+  package "Technician Functions" {
+    usecase "View Pending Requests" as UC21
+    usecase "Upload X-ray Images" as UC22
+    usecase "Process AI Analysis" as UC23
+    usecase "View Statistics" as UC24
+    usecase "Receive Notifications" as UC25
+  }
+}
+
+' Admin relationships
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+admin --> UC5
+admin --> UC6
+
+' Reception relationships
+reception --> UC7
+reception --> UC8
+reception --> UC9
+reception --> UC10
+reception --> UC11
+
+' General Doctor relationships
+gd --> UC12
+gd --> UC13
+gd --> UC14
+gd --> UC15
+
+' Specialist Doctor relationships
+sd --> UC16
+sd --> UC17
+sd --> UC18
+sd --> UC19
+sd --> UC20
+
+' Technician relationships
+tech --> UC21
+tech --> UC22
+tech --> UC23
+tech --> UC24
+tech --> UC25
+
+' Include relationships
+UC9 ..> UC4 : <<include>>
+UC10 ..> UC4 : <<include>>
+UC13 ..> UC20 : <<include>>
+UC17 ..> UC25 : <<include>>
+UC22 ..> UC20 : <<include>>
+
+@enduml

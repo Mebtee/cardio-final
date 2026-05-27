@@ -1,0 +1,107 @@
+@startuml complete_workflow_sequence
+!theme plain
+title Complete System Workflow - Patient Registration to X-ray Analysis
+
+actor Reception as rec
+actor "General Doctor" as gd
+actor "Specialist Doctor" as sd
+actor "X-ray Technician" as tech
+actor Admin as admin
+participant "System" as sys
+participant "Database" as db
+participant "AI Model" as ai
+participant "Notification" as notif
+
+== Patient Registration ==
+rec -> sys: Register Patient
+sys -> sys: Generate Patient ID (PAT####)
+sys -> db: Store Patient Data
+db -> sys: Confirm Registration
+sys -> notif: Notify General Doctors
+sys -> rec: Registration Successful
+
+== Patient Triage ==
+notif -> gd: New Patient Registered
+gd -> sys: View Registered Patients
+sys -> db: Query Registered Patients
+db -> sys: Return Patient List
+sys -> gd: Display Patients
+
+gd -> sys: Refer Patient to Specialist
+sys -> db: Update Patient Status to 'referred'
+sys -> db: Set referred_to field
+db -> sys: Confirm Referral
+sys -> notif: Notify Specialist Doctor
+sys -> gd: Referral Success
+
+== X-ray Request Creation ==
+notif -> sd: Patient Referred to You
+sd -> sys: View Referred Patients
+sys -> db: Query Referred Patients
+db -> sys: Return Patient List
+sys -> sd: Display Referred Patients
+
+sd -> sys: Create X-ray Request
+sys -> db: Create X-ray Request Record
+sys -> db: Update Patient Status to 'xray_requested'
+db -> sys: Confirm Request Creation
+sys -> notif: Notify X-ray Technicians
+sys -> sd: Request Created
+
+== X-ray Processing ==
+notif -> tech: New X-ray Request
+tech -> sys: View Pending Requests
+sys -> db: Query Pending Requests
+db -> sys: Return Request Queue
+sys -> tech: Display Requests
+
+tech -> sys: Upload X-ray Image (JPEG/PNG)
+sys -> ai: Analyze for Cardiomegaly
+ai -> sys: Return Prediction & Confidence
+sys -> db: Store Results
+sys -> db: Update Request Status to 'completed'
+db -> sys: Confirm Storage
+sys -> notif: Notify Requesting Doctor
+sys -> tech: Analysis Complete
+
+== Results Review ==
+notif -> sd: X-ray Result Ready
+sd -> sys: View X-ray Results
+sys -> db: Query Prediction Results
+db -> sys: Return AI Analysis
+sys -> sd: Display Results (Positive/Negative + Confidence)
+
+== Administrative Oversight ==
+admin -> sys: Monitor System Overview
+sys -> db: Query System Metrics
+db -> sys: Return Analytics
+sys -> admin: Display Dashboard with Charts
+
+admin -> sys: View Diagnosis Data
+sys -> db: Query All Predictions
+db -> sys: Return Diagnosis Records
+sys -> admin: Display Filterable Data
+
+== Patient Data Edit (Optional) ==
+rec -> sys: Request Patient Edit
+sys -> db: Create Edit Request
+db -> sys: Confirm Request
+sys -> admin: Notify Edit Request
+
+admin -> sys: Review Edit Request
+admin -> sys: Approve Request
+sys -> db: Update Request Status
+sys -> notif: Notify Reception
+sys -> admin: Approval Confirmed
+
+rec -> sys: Submit Patient Changes
+sys -> db: Store Proposed Changes
+sys -> admin: Notify Final Approval Needed
+
+admin -> sys: Final Approval
+sys -> db: Apply Changes to Patient Record
+sys -> db: Update Request Status to 'approved_final'
+db -> sys: Confirm Updates
+sys -> admin: Changes Applied Successfully
+
+@enduml

@@ -1,0 +1,107 @@
+@startuml object_diagram_ai_analysis
+!theme plain
+title Object Diagram - AI Analysis Processing
+
+object "xrayRequest2 : XRayRequest" as xrayRequest2 {
+  id = "req-def456"
+  doctorId = 4
+  patientName = "Michael Davis"
+  patientId = "PAT0004"
+  requestNotes = "Follow-up chest X-ray"
+  status = "in_progress"
+  createdAt = "2025-12-15 13:00:00"
+}
+
+object "technician2 : XRayTechnician" as technician2 {
+  id = 9
+  username = "xraytech2"
+  email = "tech2@hospital.com"
+  role = "xray_technician"
+  fullName = "Jennifer Lee"
+  specialty = null
+  isBanned = false
+  createdAt = "2025-12-01 08:00:00"
+}
+
+object "uploadedImage : Object" as uploadedImage {
+  filename = "chest_xray_michael.png"
+  fileSize = 2048576
+  mimeType = "image/png"
+  uploadTime = "2025-12-15 13:15:00"
+  filePath = "/uploads/pred-uvw123_chest_xray_michael.png"
+  validationStatus = "passed"
+}
+
+object "aiModel : Object" as aiModel {
+  modelName = "cardiomegaly_detector_v2"
+  modelVersion = "2.1.0"
+  inputSize = "[224, 224, 3]"
+  outputClasses = "['negative', 'positive']"
+  loadedAt = "2025-12-15 08:00:00"
+  isReady = true
+}
+
+object "prediction2 : Prediction" as prediction2 {
+  id = "pred-uvw123"
+  requestId = "req-def456"
+  filename = "chest_xray_michael.png"
+  prediction = "negative"
+  confidence = 0.92
+  timestamp = "2025-12-15 13:16:30"
+}
+
+object "processingLog : Object" as processingLog {
+  requestId = "req-def456"
+  predictionId = "pred-uvw123"
+  startTime = "2025-12-15 13:15:30"
+  endTime = "2025-12-15 13:16:30"
+  processingTime = 60.5
+  steps = "['validation', 'preprocessing', 'inference', 'postprocessing']"
+  memoryUsage = 512
+  gpuUsage = 85
+}
+
+object "notification7 : Notification" as notification7 {
+  id = 7
+  userId = 4
+  type = "xray_result_ready"
+  title = "X-ray Result Ready"
+  message = "Result for Michael Davis: Negative (92% confidence)"
+  isRead = false
+  createdAt = "2025-12-15 13:16:35"
+}
+
+' Relationships
+technician2 --> xrayRequest2 : "processes"
+technician2 --> uploadedImage : "uploaded"
+uploadedImage --> aiModel : "analyzed by"
+aiModel --> prediction2 : "generates"
+prediction2 --> xrayRequest2 : "completes"
+processingLog --> prediction2 : "tracks"
+prediction2 --> notification7 : "triggers"
+
+note right of uploadedImage
+  Valid PNG chest X-ray
+  image uploaded by
+  technician for analysis
+end note
+
+note right of aiModel
+  AI cardiomegaly detection
+  model loaded and ready
+  for image analysis
+end note
+
+note right of prediction2
+  AI determined negative
+  result with 92% confidence
+  indicating no cardiomegaly
+end note
+
+note right of processingLog
+  Detailed processing metrics
+  for performance monitoring
+  and system optimization
+end note
+
+@enduml

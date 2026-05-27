@@ -1,0 +1,86 @@
+@startuml admin_activity
+!theme plain
+title Admin Activity Diagram
+
+start
+
+:Login to System;
+
+if (Authentication Successful?) then (yes)
+  :Access Dashboard;
+  
+  :Select Activity;
+  
+  switch (Activity Type?)
+  case (Manage Users)
+    :View User List;
+    
+    switch (User Action?)
+    case (Create User)
+      :Enter User Details;
+      :Set Role & Permissions;
+      :Save to Database;
+      :Display Success Message;
+    case (Edit User)
+      :Select User;
+      :Modify Details;
+      :Update Database;
+      :Display Success Message;
+    case (Ban/Unban User)
+      :Select User;
+      :Confirm Action;
+      :Update User Status;
+      :Display Success Message;
+    endswitch
+    
+  case (View System Overview)
+    :Query System Metrics;
+    :Generate Charts;
+    :Display Analytics Dashboard;
+    
+  case (Review Edit Requests)
+    :Load Pending Requests;
+    
+    if (Requests Available?) then (yes)
+      :Select Request;
+      :Review Patient Data Changes;
+      
+      if (Approve Request?) then (yes)
+        if (First Approval?) then (yes)
+          :Set Status to 'approved_for_edit';
+          :Notify Reception User;
+        else (no)
+          :Apply Changes to Patient;
+          :Set Status to 'approved_final';
+        endif
+      else (no)
+        :Reject Request;
+        :Add Rejection Notes;
+      endif
+      
+      :Update Database;
+      :Display Confirmation;
+    else (no)
+      :Display "No Pending Requests";
+    endif
+    
+  case (Monitor Diagnosis Data)
+    :Load Diagnosis Records;
+    :Apply Filters (if any);
+    :Display Data Table;
+    
+    if (Download Images?) then (yes)
+      :Select Images;
+      :Generate Download Links;
+      :Provide Files to User;
+    endif
+    
+  endswitch
+  
+else (no)
+  :Display Error Message;
+endif
+
+stop
+
+@enduml

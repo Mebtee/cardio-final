@@ -1,0 +1,55 @@
+@startuml patient_edit_request_state
+!theme plain
+title Patient Edit Request State Chart Diagram
+
+[*] --> Created
+
+Created --> PendingApproval : submitRequest()\n[Reception submits edit request]
+
+PendingApproval --> ApprovedForEdit : adminApprove()\n[Admin approves initial request]
+PendingApproval --> Rejected : adminReject()\n[Admin rejects request]
+
+ApprovedForEdit --> ChangesSubmitted : submitChanges()\n[Reception submits proposed changes]
+
+ChangesSubmitted --> ApprovedFinal : adminFinalApprove()\n[Admin approves changes]
+ChangesSubmitted --> Rejected : adminRejectChanges()\n[Admin rejects changes]
+
+ApprovedFinal --> [*] : processComplete()\n[Changes applied to patient record]
+Rejected --> [*] : processComplete()\n[Request closed]
+
+' Self-transitions
+PendingApproval --> PendingApproval : addNotes()\n[Admin adds review notes]
+ApprovedForEdit --> ApprovedForEdit : modifyChanges()\n[Reception modifies proposed changes]
+
+' Notes
+note right of Created
+  Edit request initialized
+  with patient ID and reason
+end note
+
+note right of PendingApproval
+  Waiting for admin
+  to review request
+end note
+
+note right of ApprovedForEdit
+  Reception can now
+  edit patient data
+end note
+
+note right of ChangesSubmitted
+  Proposed changes
+  await final approval
+end note
+
+note right of ApprovedFinal
+  Changes applied to
+  patient record
+end note
+
+note right of Rejected
+  Request denied
+  with reason provided
+end note
+
+@enduml

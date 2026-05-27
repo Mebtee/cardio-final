@@ -1,0 +1,84 @@
+@startuml ai_prediction_state
+!theme plain
+title AI Prediction State Chart Diagram
+
+[*] --> ImageReceived
+
+ImageReceived --> Validating : startValidation()\n[Begin image validation]
+
+Validating --> Valid : validationPassed()\n[Image is valid chest X-ray]
+Validating --> Invalid : validationFailed()\n[Not a chest X-ray image]
+
+Invalid --> [*] : reject()\n[Image rejected, process terminated]
+
+Valid --> Processing : startAnalysis()\n[Begin AI cardiomegaly detection]
+
+Processing --> AnalysisComplete : analysisFinished()\n[AI model returns result]
+Processing --> ProcessingError : analysisFailed()\n[AI processing error]
+
+ProcessingError --> Processing : retry()\n[Retry analysis]
+ProcessingError --> Failed : maxRetriesExceeded()\n[Give up after max retries]
+
+AnalysisComplete --> ResultStored : storeResult()\n[Save prediction to database]
+
+ResultStored --> NotificationSent : notifyDoctor()\n[Notify requesting doctor]
+
+NotificationSent --> [*] : complete()\n[Prediction process complete]
+
+Failed --> [*] : cleanup()\n[Clean up failed prediction]
+
+' Self-transitions
+Processing --> Processing : updateProgress()\n[Update processing status]
+
+' Notes
+note right of ImageReceived
+  X-ray image uploaded
+  by technician
+end note
+
+note right of Validating
+  Checking if image is
+  valid chest X-ray
+end note
+
+note right of Valid
+  Image passes validation
+  Ready for AI analysis
+end note
+
+note right of Invalid
+  Image rejected
+  (not chest X-ray)
+end note
+
+note right of Processing
+  AI model analyzing
+  for cardiomegaly signs
+end note
+
+note right of AnalysisComplete
+  Prediction generated
+  with confidence score
+end note
+
+note right of ProcessingError
+  AI analysis failed
+  Retry possible
+end note
+
+note right of ResultStored
+  Prediction saved
+  in database
+end note
+
+note right of NotificationSent
+  Doctor notified
+  of available results
+end note
+
+note right of Failed
+  Prediction failed
+  after max retries
+end note
+
+@enduml

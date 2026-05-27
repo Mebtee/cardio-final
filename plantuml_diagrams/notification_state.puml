@@ -1,0 +1,64 @@
+@startuml notification_state
+!theme plain
+title Notification State Chart Diagram
+
+[*] --> Created
+
+Created --> Pending : send()\n[Notification queued for delivery]
+
+Pending --> Delivered : deliver()\n[Notification sent to user]
+
+Delivered --> Read : markAsRead()\n[User reads notification]
+Delivered --> Expired : expire()\n[Notification expires after timeout]
+
+Read --> Archived : archive()\n[Notification moved to history]
+Expired --> Archived : cleanup()\n[System cleanup process]
+
+Archived --> [*] : delete()\n[Notification permanently removed]
+
+' Error states
+Pending --> Failed : deliveryFailed()\n[Delivery attempt failed]
+Failed --> Pending : retry()\n[Retry delivery]
+Failed --> Archived : giveUp()\n[Max retries exceeded]
+
+' Self-transitions
+Delivered --> Delivered : view()\n[User views notification again]
+Read --> Read : reread()\n[User accesses read notification]
+
+' Notes
+note right of Created
+  Notification created
+  with user ID and message
+end note
+
+note right of Pending
+  Queued for delivery
+  to target user
+end note
+
+note right of Delivered
+  Visible in user's
+  notification panel
+end note
+
+note right of Read
+  User has acknowledged
+  the notification
+end note
+
+note right of Expired
+  Notification timed out
+  without being read
+end note
+
+note right of Failed
+  Delivery failed
+  (user offline, etc.)
+end note
+
+note right of Archived
+  Stored in notification
+  history for reference
+end note
+
+@enduml

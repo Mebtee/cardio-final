@@ -1,0 +1,66 @@
+@startuml user_account_state
+!theme plain
+title User Account State Chart Diagram
+
+[*] --> Created
+
+Created --> Active : activate()\n[Account activated by admin]
+
+Active --> Suspended : suspend()\n[Temporary suspension]
+Active --> Banned : ban()\n[Account banned by admin]
+Active --> PasswordReset : requestPasswordReset()\n[User requests password reset]
+
+Suspended --> Active : reactivate()\n[Admin reactivates account]
+Suspended --> Banned : ban()\n[Escalate to permanent ban]
+
+Banned --> Active : unban()\n[Admin unbans account]
+
+PasswordReset --> Active : resetComplete()\n[Password successfully reset]
+PasswordReset --> Active : resetExpired()\n[Reset token expired]
+
+Active --> Deleted : deleteAccount()\n[Admin deletes account]
+Banned --> Deleted : deleteAccount()\n[Admin deletes banned account]
+Suspended --> Deleted : deleteAccount()\n[Admin deletes suspended account]
+
+Deleted --> [*] : purge()\n[Account data purged]
+
+' Self-transitions
+Active --> Active : login()\n[Successful login]
+Active --> Active : updateProfile()\n[User updates profile]
+Active --> Active : changePassword()\n[User changes password]
+
+' Failed login attempts
+Active --> Active : failedLogin()\n[Failed login attempt]
+
+' Notes
+note right of Created
+  Account created
+  awaiting activation
+end note
+
+note right of Active
+  Normal account state
+  Full system access
+end note
+
+note right of Suspended
+  Temporary restriction
+  Login disabled
+end note
+
+note right of Banned
+  Permanent restriction
+  All access denied
+end note
+
+note right of PasswordReset
+  Password reset process
+  in progress
+end note
+
+note right of Deleted
+  Account marked for deletion
+  Data cleanup pending
+end note
+
+@enduml

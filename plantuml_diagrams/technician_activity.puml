@@ -1,0 +1,94 @@
+@startuml technician_activity
+!theme plain
+title X-ray Technician Activity Diagram
+
+start
+
+:Login to System;
+
+if (Authentication Successful?) then (yes)
+  :Access Dashboard;
+  :View Statistics (Pending, Completed, Total);
+  
+  :View Pending Requests;
+  
+  if (Requests Available?) then (yes)
+    :Select Request;
+    :Review Patient Information;
+    :Review Request Details;
+    
+    :Prepare for X-ray;
+    :Position Patient;
+    :Capture X-ray Image;
+    
+    if (Image Quality OK?) then (yes)
+      :Select Image File;
+      
+      if (Valid File Format?) then (yes)
+        if (JPEG or PNG?) then (yes)
+          :Upload Image to System;
+          :Initiate AI Analysis;
+          
+          :Wait for Processing;
+          
+          switch (AI Analysis Result?)
+          case (Valid X-ray - Positive)
+            :Store Prediction Result;
+            :Update Request Status to 'completed';
+            :Notify Requesting Doctor;
+            :Display "Positive for Cardiomegaly" + Confidence;
+          case (Valid X-ray - Negative)
+            :Store Prediction Result;
+            :Update Request Status to 'completed';
+            :Notify Requesting Doctor;
+            :Display "Negative" + Confidence;
+          case (Invalid X-ray)
+            :Delete Invalid Image;
+            :Display Error "Not a valid chest X-ray";
+            :Return to Image Selection;
+          case (Processing Error)
+            :Delete Failed Image;
+            :Display Error "Processing Failed";
+            :Return to Image Selection;
+          endswitch
+          
+        else (no)
+          :Display Error "Only JPEG/PNG allowed";
+          :Return to File Selection;
+        endif
+      else (no)
+        :Display File Format Error;
+      endif
+    else (no)
+      :Retake X-ray Image;
+    endif
+    
+    if (More Requests?) then (yes)
+      :Continue to Next Request;
+    else (no)
+      :Complete Session;
+    endif
+    
+  else (no)
+    :Display "No Pending Requests";
+    :Wait for New Requests;
+  endif
+  
+  if (Check Notifications?) then (yes)
+    :View Notification Bell;
+    :Read New Request Alerts;
+    :Mark Notifications as Read;
+  endif
+  
+  if (Refresh Request List?) then (yes)
+    :Reload Pending Requests;
+    :Update Statistics;
+  endif
+  
+else (no)
+  :Display Authentication Error;
+endif
+
+stop
+
+@enduml

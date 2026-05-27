@@ -1,0 +1,57 @@
+@startuml patient_state
+!theme plain
+title Patient State Chart Diagram
+
+[*] --> Initial
+
+Initial --> Registered : register()\n[Reception creates patient record]
+
+Registered --> Referred : refer()\n[General Doctor refers to specialist]
+
+Referred --> XRayRequested : createXRayRequest()\n[Specialist Doctor creates X-ray request]
+
+XRayRequested --> XRayProcessing : uploadImage()\n[Technician uploads X-ray image]
+
+XRayProcessing --> ResultsAvailable : analyzeComplete()\n[AI analysis completes]
+
+ResultsAvailable --> Completed : reviewResults()\n[Doctor reviews results]
+
+' Self-transitions for additional requests
+Referred --> Referred : createAdditionalXRayRequest()\n[Multiple X-ray requests possible]
+ResultsAvailable --> XRayRequested : requestAnotherXRay()\n[Doctor requests additional X-ray]
+
+' Error states
+XRayProcessing --> XRayRequested : processingFailed()\n[Invalid image or processing error]
+
+' Notes
+note right of Registered
+  Patient awaits triage by
+  General Doctor
+end note
+
+note right of Referred
+  Patient assigned to
+  Specialist Doctor
+end note
+
+note right of XRayRequested
+  X-ray examination
+  order created
+end note
+
+note right of XRayProcessing
+  AI analyzing chest X-ray
+  for cardiomegaly detection
+end note
+
+note right of ResultsAvailable
+  AI prediction and confidence
+  score available for review
+end note
+
+note right of Completed
+  Case assessment complete
+  (may have multiple X-rays)
+end note
+
+@enduml

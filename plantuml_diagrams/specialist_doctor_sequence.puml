@@ -1,0 +1,67 @@
+@startuml specialist_doctor_sequence
+!theme plain
+title Specialist Doctor Sequence Diagram - X-ray Management & Results Review
+
+actor "Specialist Doctor" as sd
+participant "System" as sys
+participant "Database" as db
+participant "Notification" as notif
+
+== Login ==
+sd -> sys: Login
+sys -> db: Validate Credentials
+db -> sys: Return User Data
+sys -> sd: Display Dashboard
+
+== View Referred Patients ==
+sd -> sys: View Referred Patients
+sys -> db: Query Patients (referred_to=doctor_id, status='referred')
+db -> sys: Return Patient List
+sys -> sd: Display Referred Patients
+
+== Create X-ray Request ==
+sd -> sys: Select Patient for X-ray Request
+sys -> db: Query Patient Details
+db -> sys: Return Patient Data
+sys -> sd: Display Patient Information
+
+sd -> sys: Create X-ray Request
+sd -> sys: Enter Request Details
+sys -> sys: Generate Request ID
+sys -> db: Insert X-ray Request Record
+sys -> db: Update Patient Status to 'xray_requested'
+db -> sys: Return Request ID
+sys -> notif: Notify X-ray Technicians
+sys -> sd: Request Created Successfully
+
+== View Request History ==
+sd -> sys: View X-ray Request History
+sys -> db: Query Doctor's Requests with Results
+db -> sys: Return Request List with Predictions
+sys -> sd: Display Request History with Status
+
+== Review X-ray Results ==
+sd -> sys: Select Completed Request
+sys -> db: Query Prediction Details
+db -> sys: Return AI Analysis (prediction, confidence)
+sys -> sd: Display Detailed Results
+
+sd -> sys: Review AI Prediction
+alt Positive Result
+  sys -> sd: Display "Positive for Cardiomegaly" + Confidence
+else Negative Result
+  sys -> sd: Display "Negative" + Confidence
+end
+
+== Create Additional X-ray Request ==
+sd -> sys: Request Another X-ray
+sys -> db: Create New X-ray Request
+db -> sys: Confirm Creation
+sys -> notif: Notify Technicians
+sys -> sd: New Request Created
+
+== Receive Notifications ==
+notif -> sd: Patient Referred to You
+notif -> sd: X-ray Result Ready
+
+@enduml

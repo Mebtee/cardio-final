@@ -1,0 +1,172 @@
+@startuml object_diagram_complete_scenario
+!theme plain
+title Object Diagram - Complete System Scenario
+
+' Users
+object "admin : Admin" as admin {
+  id = 1
+  username = "admin"
+  fullName = "System Administrator"
+  role = "admin"
+  isBanned = false
+}
+
+object "reception : Reception" as reception {
+  id = 3
+  username = "reception1"
+  fullName = "Sarah Johnson"
+  role = "reception"
+  isBanned = false
+}
+
+object "generalDoc : GeneralDoctor" as generalDoc {
+  id = 2
+  username = "gendoc1"
+  fullName = "Dr. Michael Smith"
+  role = "general_doctor"
+  isBanned = false
+}
+
+object "specialist : SpecialistDoctor" as specialist {
+  id = 4
+  username = "cardiologist1"
+  fullName = "Dr. Emily Johnson"
+  role = "doctor"
+  specialty = "Cardiology"
+  isBanned = false
+}
+
+object "technician : XRayTechnician" as technician {
+  id = 5
+  username = "xraytech1"
+  fullName = "Mark Wilson"
+  role = "xray_technician"
+  isBanned = false
+}
+
+' Core Entities
+object "patient : Patient" as patient {
+  id = 1
+  patientName = "John Doe"
+  patientId = "PAT0001"
+  contactNumber = "0911234567"
+  age = 45
+  gender = "male"
+  status = "completed"
+  registeredBy = 3
+  referredTo = 4
+}
+
+object "xrayRequest : XRayRequest" as xrayRequest {
+  id = "req-abc123"
+  doctorId = 4
+  patientName = "John Doe"
+  patientId = "PAT0001"
+  status = "completed"
+  requestNotes = "Chest pain evaluation"
+}
+
+object "prediction : Prediction" as prediction {
+  id = "pred-xyz789"
+  requestId = "req-abc123"
+  filename = "chest_xray_john.jpg"
+  prediction = "positive"
+  confidence = 0.89
+}
+
+object "editRequest : PatientEditRequest" as editRequest {
+  id = 1
+  patientId = 1
+  requestedBy = 3
+  requestReason = "Update contact information"
+  status = "approved_final"
+  reviewedBy = 1
+}
+
+' Notifications
+object "notification1 : Notification" as notification1 {
+  id = 1
+  userId = 2
+  type = "patient_registered"
+  title = "New Patient Registered"
+  isRead = true
+}
+
+object "notification2 : Notification" as notification2 {
+  id = 2
+  userId = 4
+  type = "patient_referred"
+  title = "Patient Referral"
+  isRead = true
+}
+
+object "notification3 : Notification" as notification3 {
+  id = 3
+  userId = 5
+  type = "xray_request"
+  title = "New X-ray Request"
+  isRead = true
+}
+
+object "notification4 : Notification" as notification4 {
+  id = 4
+  userId = 4
+  type = "xray_result_ready"
+  title = "X-ray Result Ready"
+  isRead = false
+}
+
+' System Overview
+object "systemOverview : SystemOverview" as systemOverview {
+  totalUsers = 5
+  totalRequests = 1
+  totalDiagnoses = 1
+  positiveResults = 1
+  negativeResults = 0
+  systemPerformance = "{\"successRate\": 100.0}"
+}
+
+' Relationships - Patient Flow
+reception --> patient : "registered"
+patient --> generalDoc : "triaged by"
+generalDoc --> patient : "referred"
+patient --> specialist : "assigned to"
+specialist --> xrayRequest : "created"
+xrayRequest --> technician : "processed by"
+technician --> prediction : "generated"
+prediction --> specialist : "reviewed by"
+
+' Edit Request Flow
+reception --> editRequest : "requested"
+editRequest --> admin : "approved by"
+editRequest --> patient : "modifies"
+
+' Notification Flow
+patient --> notification1 : "triggers"
+notification1 --> generalDoc : "notifies"
+patient --> notification2 : "triggers"
+notification2 --> specialist : "notifies"
+xrayRequest --> notification3 : "triggers"
+notification3 --> technician : "notifies"
+prediction --> notification4 : "triggers"
+notification4 --> specialist : "notifies"
+
+' System Monitoring
+admin --> systemOverview : "monitors"
+systemOverview --> patient : "tracks"
+systemOverview --> xrayRequest : "tracks"
+systemOverview --> prediction : "tracks"
+
+note top of patient
+  Complete patient journey:
+  Registration → Triage → Referral → 
+  X-ray → AI Analysis → Results
+end note
+
+note bottom of systemOverview
+  Admin dashboard showing
+  real-time system metrics
+  and performance data
+end note
+
+@enduml
